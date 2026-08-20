@@ -1,0 +1,28 @@
+{
+  "$comment": "Shapes, not behaviour -- and every field name here is taken from HubSpot's published OpenAPI document (SimplePublicObject), not from memory. The id is a NUMERIC STRING, which is the detail worth being faithful about: an author who wires it into a follow-up call and finds a number there in one runtime and a string in another has a bug that only appears across languages.",
+  "operation": "contact_create",
+
+  "values": {
+    "$comment": "Drawn once, before the response. HubSpot returns the same id in two places -- `id` at the top and `hs_object_id` inside properties -- and two draws would produce a contact that cannot exist. An author who reads one and writes back the other would be testing against a shape the provider never sends.",
+    "contact_id": { "$fake": "digits", "length": 9 }
+  },
+
+  "response": {
+    "id": { "$ref": "contact_id" },
+    "properties": {
+      "email": { "$config": "email", "as": "string", "orNull": true },
+      "firstname": { "$config": "firstName", "as": "string", "orNull": true },
+      "lastname": { "$config": "lastName", "as": "string", "orNull": true },
+      "company": { "$config": "company", "as": "string", "orNull": true },
+      "phone": { "$config": "phone", "as": "string", "orNull": true },
+      "lifecyclestage": { "$config": "lifecycleStage", "as": "string", "default": "lead" },
+      "createdate": "2026-01-01T00:00:00.000Z",
+      "lastmodifieddate": "2026-01-01T00:00:00.000Z",
+      "hs_object_id": { "$ref": "contact_id" }
+    },
+    "createdAt": "2026-01-01T00:00:00.000Z",
+    "updatedAt": "2026-01-01T00:00:00.000Z",
+    "archived": false,
+    "$archivedComment": "Never true. A faked contact that claimed to be archived would make the downstream guard -- act only on a live contact -- untestable, which is the branch most worth covering."
+  }
+}

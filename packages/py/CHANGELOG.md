@@ -1,0 +1,70 @@
+# Changelog
+
+All notable changes to `@particle-academy/hubspot-ui`, `@particle-academy/hubspot-js`,
+`particle-academy/hubspot-php` and `fancy-hubspot`.
+
+The four packages share one version, because they are generated from one
+`provider/` definition and a version that meant something different in each
+would be a version nobody could reason about.
+
+## [0.1.0] — 2026-08-20
+
+First release. Provider four, and the first that is not a static credential.
+
+### Added
+
+- `contact_create` — create a contact. `POST /crm/v3/objects/contacts`.
+- A faker for it, so the node runs on a canvas with no app, no consent screen
+  and no HubSpot account.
+- `HUBSPOT_OAUTH` — the OAuth2 exchange, declared for a host to perform.
+
+### Why HubSpot, and not the next name on the list
+
+Stripe, Resend and Telegram are all static-credential providers. Three of those
+prove the generator handles that shape three times; they say nothing about the
+shape it has never met. HubSpot is **OAuth2**, and it broke five assumptions —
+four caught by the strict key check on the way in, and one that could not be,
+because the spelling was already legal.
+
+**Every fact here is read from HubSpot's own published OpenAPI document**
+(`https://api.hubspot.com/public/api/spec/v1/specs` → Contacts v3), not from
+memory: the base URL, the path, the request schema, the response schema and the
+OAuth2 URLs and scope.
+
+### The shape of the credential is the point
+
+An OAuth app's client id and secret are **one value for the whole
+installation** — the same app serves every connected account. The access and
+refresh tokens are **one per account**. The connector runtime has always had a
+word for this (`CredentialScope`); nothing in the generator did, so every
+credential was implicitly per-account. Getting it wrong in the other direction
+is not untidy, it is one account's token reaching another's.
+
+`accessToken` is the only credential in `requires`. `clientId` and
+`clientSecret` are needed to OBTAIN a token and to refresh it; they are never
+sent with a request, and listing them would make every call refuse without an
+app secret it does not use.
+
+### The package declares the dance and does not perform it
+
+A consent screen needs a browser, a redirect URI and somewhere to persist the
+result. All three belong to the host — a package that ran the exchange itself
+would have to own a web server. So `HUBSPOT_OAUTH` says precisely enough for a
+host to do it, including the part that is easy to miss: **an access token lasts
+30 minutes**. A host that never refreshes works all afternoon and is broken by
+morning, and nothing in the request says why.
+
+### Not here yet
+
+No trigger. HubSpot signs webhooks with `X-HubSpot-Signature-v3`, an HMAC over
+`method + uri + body + timestamp` — and `{method}` and `{uri}` are not payload
+slots the verification vocabulary has. That is the same shape as Resend's Svix
+problem, and the two of them together are what the next round of webhook work
+should be driven by.
+
+`sideEffects` is `unsafe-to-replay`. HubSpot has no idempotency header, so a
+retry creates a second contact; it de-duplicates on email at the account level,
+which softens the common case and does nothing for a contact created without
+one.
+
+[0.1.0]: https://github.com/Fancy-Friends/hubspot/releases/tag/v0.1.0
