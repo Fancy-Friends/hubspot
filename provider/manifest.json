@@ -25,6 +25,8 @@
     "scopes": ["crm.objects.contacts.write"],
     "accessTokenCredential": "accessToken",
     "refreshTokenCredential": "refreshToken",
+    "$refreshTokenRotates": "Reusable. HubSpot: \"You get one refresh token per installation, and as long as that installation is active, you can keep using it to get new access tokens.\" They do not expire; an uninstall is what kills one.",
+    "refreshTokenRotates": false,
     "accessTokenTtlSeconds": 1800,
     "$comment": "The package DECLARES the dance and does not perform it. A consent screen needs a browser, a redirect URI and somewhere to persist the result, and all three belong to the host -- a package that tried would need to own a web server. Every value here is read from HubSpot's own published OpenAPI document (securitySchemes.oauth2.flows.authorizationCode), not from memory.",
     "$ttlComment": "HubSpot access tokens last 30 minutes. That is short enough that a host which never refreshes will appear to work in testing and fail in production overnight -- so the TTL is declared rather than left to be discovered."
