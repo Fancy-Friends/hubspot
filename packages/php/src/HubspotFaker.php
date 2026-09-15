@@ -48,7 +48,7 @@ final class HubspotFaker
     }
 
     /** @param array<string,mixed> $config */
-    private static function ContactCreate(array $config, mixed $fake): array
+    private static function ContactCreate(array $config, mixed $fake): array|\stdClass
     {
         $boundContactId = implode('', array_map(static fn (): int => $fake->int(0, 9), range(1, 9)));
 
