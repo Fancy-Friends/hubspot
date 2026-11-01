@@ -56,6 +56,7 @@ final class HubspotFlow
         OwnerListExecutor::class,
         PipelineListExecutor::class,
         PropertyListExecutor::class,
+        CrmEventTriggerExecutor::class,
     ];
 
     /**

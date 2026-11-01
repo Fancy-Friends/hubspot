@@ -504,6 +504,43 @@ def test_property_list_fakes_the_published_shape() -> None:
     }
 
 
+def test_crm_event_fakes_the_published_shape() -> None:
+    config = {}
+    fake = FakeValues(seed_for_call("hubspot", "crm_event", config))
+
+    faked = respond("crm_event", {"config": config, "fake": fake})
+
+    assert faked == [
+        {
+            "eventId": 531833541,
+            "subscriptionId": 3923621,
+            "portalId": 48807704,
+            "appId": 16111050,
+            "occurredAt": 1752613920733,
+            "subscriptionType": "contact.creation",
+            "attemptNumber": 0,
+            "objectId": 138017612137,
+            "changeFlag": "CREATED",
+            "changeSource": "CRM_UI",
+            "sourceId": "userId:76023669",
+        },
+        {
+            "eventId": 531833542,
+            "subscriptionId": 3923622,
+            "portalId": 48807704,
+            "appId": 16111050,
+            "occurredAt": 1752613921000,
+            "subscriptionType": "deal.propertyChange",
+            "attemptNumber": 0,
+            "objectId": 9876543210,
+            "propertyName": "dealstage",
+            "propertyValue": "closedwon",
+            "changeSource": "CRM_UI",
+            "sourceId": "userId:76023669",
+        },
+    ]
+
+
 def test_an_operation_with_no_fixture_raises_rather_than_inventing_a_shape() -> None:
     fake = FakeValues(seed_for_call("hubspot", "no_such_operation", {}))
 

@@ -452,6 +452,39 @@ const GOLDENS = [
         }
       ]
     }
+  },
+  {
+    "operation": "crm_event",
+    "config": {},
+    "expected": [
+      {
+        "eventId": 531833541,
+        "subscriptionId": 3923621,
+        "portalId": 48807704,
+        "appId": 16111050,
+        "occurredAt": 1752613920733,
+        "subscriptionType": "contact.creation",
+        "attemptNumber": 0,
+        "objectId": 138017612137,
+        "changeFlag": "CREATED",
+        "changeSource": "CRM_UI",
+        "sourceId": "userId:76023669"
+      },
+      {
+        "eventId": 531833542,
+        "subscriptionId": 3923622,
+        "portalId": 48807704,
+        "appId": 16111050,
+        "occurredAt": 1752613921000,
+        "subscriptionType": "deal.propertyChange",
+        "attemptNumber": 0,
+        "objectId": 9876543210,
+        "propertyName": "dealstage",
+        "propertyValue": "closedwon",
+        "changeSource": "CRM_UI",
+        "sourceId": "userId:76023669"
+      }
+    ]
   }
 ];
 
@@ -468,7 +501,7 @@ for (const { operation, config, expected } of GOLDENS) {
 
 // The ui package is a separate tarball, and js depends on it by its
 // published name — so this also proves that dependency resolves.
-assert.equal(HUBSPOT_KINDS.length, 18);
+assert.equal(HUBSPOT_KINDS.length, 19);
 for (const kind of HUBSPOT_KINDS) {
   const keys = kind.configSchema.map((field) => field.key);
   assert.equal(keys[0], "connection");
