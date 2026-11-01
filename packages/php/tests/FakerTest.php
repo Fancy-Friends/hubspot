@@ -615,6 +615,49 @@ it('property_list fakes the shape HubSpot publishes', function () {
     ]);
 });
 
+it('crm_event fakes the shape HubSpot publishes', function () {
+    $config = [];
+    $fake = new FakeValues(FakeValues::seedForCall('hubspot', 'crm_event', $config));
+
+    $faked = HubspotFaker::respond('crm_event', ['config' => $config, 'fake' => $fake]);
+
+    // Through JSON and back, because a faked EMPTY object is a stdClass — the only
+    // PHP value that spells `{}` on the wire — and `toBe` compares objects by
+    // identity. This asserts the VALUES; the `{}`-versus-`[]` spelling is what
+    // weaver's cross-runtime parity suite asserts, byte for byte.
+    $faked = json_decode((string) json_encode($faked), true, 512, JSON_THROW_ON_ERROR);
+
+    expect($faked)->toBe([
+        [
+            'eventId' => 531833541,
+            'subscriptionId' => 3923621,
+            'portalId' => 48807704,
+            'appId' => 16111050,
+            'occurredAt' => 1752613920733,
+            'subscriptionType' => 'contact.creation',
+            'attemptNumber' => 0,
+            'objectId' => 138017612137,
+            'changeFlag' => 'CREATED',
+            'changeSource' => 'CRM_UI',
+            'sourceId' => 'userId:76023669',
+        ],
+        [
+            'eventId' => 531833542,
+            'subscriptionId' => 3923622,
+            'portalId' => 48807704,
+            'appId' => 16111050,
+            'occurredAt' => 1752613921000,
+            'subscriptionType' => 'deal.propertyChange',
+            'attemptNumber' => 0,
+            'objectId' => 9876543210,
+            'propertyName' => 'dealstage',
+            'propertyValue' => 'closedwon',
+            'changeSource' => 'CRM_UI',
+            'sourceId' => 'userId:76023669',
+        ],
+    ]);
+});
+
 it('throws for an operation with no fixture rather than inventing a shape', function () {
     $fake = new FakeValues(FakeValues::seedForCall('hubspot', 'no_such_operation', []));
 

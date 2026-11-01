@@ -477,6 +477,38 @@ def _property_list(config: dict[str, Any], fake: FakeValues) -> Any:
     }
 
 
+def _crm_event(config: dict[str, Any], fake: FakeValues) -> Any:
+    return [
+        {
+            "eventId": 531833541,
+            "subscriptionId": 3923621,
+            "portalId": 48807704,
+            "appId": 16111050,
+            "occurredAt": 1752613920733,
+            "subscriptionType": "contact.creation",
+            "attemptNumber": 0,
+            "objectId": 138017612137,
+            "changeFlag": "CREATED",
+            "changeSource": "CRM_UI",
+            "sourceId": "userId:76023669",
+        },
+        {
+            "eventId": 531833542,
+            "subscriptionId": 3923622,
+            "portalId": 48807704,
+            "appId": 16111050,
+            "occurredAt": 1752613921000,
+            "subscriptionType": "deal.propertyChange",
+            "attemptNumber": 0,
+            "objectId": 9876543210,
+            "propertyName": "dealstage",
+            "propertyValue": "closedwon",
+            "changeSource": "CRM_UI",
+            "sourceId": "userId:76023669",
+        },
+    ]
+
+
 def respond(operation: str, request: dict[str, Any]) -> Any:
     """Dispatch to the fixture for one operation."""
     config: dict[str, Any] = request.get("config") or {}
@@ -535,6 +567,9 @@ def respond(operation: str, request: dict[str, Any]) -> Any:
 
     if operation == "property_list":
         return _property_list(config, fake)
+
+    if operation == "crm_event":
+        return _crm_event(config, fake)
 
     # A faker asked for an operation it has no shape for must SAY so. Making
     # something up would produce a green run whose output silently has none of

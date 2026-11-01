@@ -490,6 +490,42 @@ test("property_list fakes the shape HubSpot publishes", () => {
   });
 });
 
+test("crm_event fakes the shape HubSpot publishes", () => {
+  const config = {};
+
+  const faked = hubspotFaker("crm_event", fakeRequest("hubspot", "crm_event", config));
+
+  assert.deepEqual(faked, [
+    {
+      "eventId": 531833541,
+      "subscriptionId": 3923621,
+      "portalId": 48807704,
+      "appId": 16111050,
+      "occurredAt": 1752613920733,
+      "subscriptionType": "contact.creation",
+      "attemptNumber": 0,
+      "objectId": 138017612137,
+      "changeFlag": "CREATED",
+      "changeSource": "CRM_UI",
+      "sourceId": "userId:76023669"
+    },
+    {
+      "eventId": 531833542,
+      "subscriptionId": 3923622,
+      "portalId": 48807704,
+      "appId": 16111050,
+      "occurredAt": 1752613921000,
+      "subscriptionType": "deal.propertyChange",
+      "attemptNumber": 0,
+      "objectId": 9876543210,
+      "propertyName": "dealstage",
+      "propertyValue": "closedwon",
+      "changeSource": "CRM_UI",
+      "sourceId": "userId:76023669"
+    }
+  ]);
+});
+
 test("an operation with no fixture throws rather than inventing a shape", () => {
   assert.throws(() => hubspotFaker("no_such_operation", fakeRequest("hubspot", "no_such_operation", {})), /no fake response/);
 });

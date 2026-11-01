@@ -36,6 +36,7 @@ export * from "./kinds/deal-update.js";
 export * from "./kinds/owner-list.js";
 export * from "./kinds/pipeline-list.js";
 export * from "./kinds/property-list.js";
+export * from "./kinds/crm-event.js";
 
 import type { NodeKindDefinition } from "@particle-academy/fancy-flow/engine";
 import { hubspotCompanyCreateKind } from "./kinds/company-create.js";
@@ -56,6 +57,7 @@ import { hubspotDealUpdateKind } from "./kinds/deal-update.js";
 import { hubspotOwnerListKind } from "./kinds/owner-list.js";
 import { hubspotPipelineListKind } from "./kinds/pipeline-list.js";
 import { hubspotPropertyListKind } from "./kinds/property-list.js";
+import { hubspotCrmEventTriggerKind } from "./kinds/crm-event.js";
 
 /** Every HubSpot kind, for a host that registers the lot. */
 export const HUBSPOT_KINDS: NodeKindDefinition[] = [
@@ -77,4 +79,5 @@ export const HUBSPOT_KINDS: NodeKindDefinition[] = [
   hubspotOwnerListKind,
   hubspotPipelineListKind,
   hubspotPropertyListKind,
+  hubspotCrmEventTriggerKind,
 ];

@@ -37,8 +37,9 @@ from .actions.pipeline_list import pipeline_list
 from .actions.property_list import property_list
 from .faker import respond
 from .service import BASE_URLS, CONNECTOR_API_VERSION, REQUIRES, SANDBOX, SERVICE, TITLE, descriptor
+from .triggers import crm_event
 
-__version__ = "0.4.0"
+__version__ = "0.5.0"
 
 __all__ = [
     "BASE_URLS",
@@ -58,6 +59,7 @@ __all__ = [
     "contact_list",
     "contact_search",
     "contact_update",
+    "crm_event",
     "deal_create",
     "deal_get",
     "deal_list",

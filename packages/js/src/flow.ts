@@ -47,6 +47,7 @@ import {
   hubspotOwnerListKind,
   hubspotPipelineListKind,
   hubspotPropertyListKind,
+  hubspotCrmEventTriggerKind,
 } from "@particle-academy/hubspot-ui";
 
 import { hubspotCompanyCreate } from "./actions/company-create.js";
@@ -67,6 +68,7 @@ import { hubspotDealUpdate } from "./actions/deal-update.js";
 import { hubspotOwnerList } from "./actions/owner-list.js";
 import { hubspotPipelineList } from "./actions/pipeline-list.js";
 import { hubspotPropertyList } from "./actions/property-list.js";
+import { HUBSPOT_CRM_EVENT } from "./triggers/crm-event.js";
 
 export const hubspotCompanyCreateExecutor: NodeExecutor = async (ctx) => {
   const config = ((ctx.node.data as { config?: Record<string, unknown> })?.config ?? {});
@@ -392,6 +394,23 @@ export const hubspotPropertyListExecutor: NodeExecutor = async (ctx) => {
   return { __port: "out", value: result };
 };
 
+export const hubspotCrmEventTriggerExecutor: NodeExecutor = async (ctx) => {
+  const config = ((ctx.node.data as { config?: Record<string, unknown> })?.config ?? {});
+  const connection = resolveConnection({
+    service: HUBSPOT.service,
+    operation: "crm_event",
+    sandbox: HUBSPOT.sandbox,
+    baseUrls: HUBSPOT.baseUrls,
+    requires: HUBSPOT.requires,
+    connectionId: typeof config.connection === "string" ? config.connection : null,
+    requested: typeof config.mode === "string" ? (config.mode as RequestedMode) : null,
+  });
+
+  const event = triggerEvent(HUBSPOT_CRM_EVENT, connection, ctx.inputs?.in, config);
+
+  return { __port: "out", value: event };
+};
+
 /** The kinds a TypeScript host registers. */
 export const HUBSPOT_RUNNABLE_KINDS: NodeKindDefinition[] = [
   { ...hubspotCompanyCreateKind, executor: hubspotCompanyCreateExecutor },
@@ -412,4 +431,5 @@ export const HUBSPOT_RUNNABLE_KINDS: NodeKindDefinition[] = [
   { ...hubspotOwnerListKind, executor: hubspotOwnerListExecutor },
   { ...hubspotPipelineListKind, executor: hubspotPipelineListExecutor },
   { ...hubspotPropertyListKind, executor: hubspotPropertyListExecutor },
+  { ...hubspotCrmEventTriggerKind, executor: hubspotCrmEventTriggerExecutor },
 ];

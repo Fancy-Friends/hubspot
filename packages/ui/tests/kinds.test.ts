@@ -50,6 +50,11 @@ test("the registry names are exactly what the manifest says", () => {
     "@particle-academy/hubspot_deal_update",
     "@particle-academy/hubspot_owner_list",
     "@particle-academy/hubspot_pipeline_list",
-    "@particle-academy/hubspot_property_list"
+    "@particle-academy/hubspot_property_list",
+    "@particle-academy/hubspot_crm_event_trigger"
   ]);
+});
+
+test("a trigger takes no input port — it starts a run rather than continuing one", () => {
+  assert.deepEqual(HUBSPOT_KINDS.find((k) => k.name.endsWith("_crm_event_trigger"))?.inputs, []);
 });

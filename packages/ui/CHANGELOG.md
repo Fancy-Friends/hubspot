@@ -7,6 +7,37 @@ The four packages share one version, because they are generated from one
 `provider/` definition and a version that meant something different in each
 would be a version nobody could reason about.
 
+## [0.5.0] — 2026-11-01
+
+### Added
+
+- **`crm_event`: HubSpot's CRM webhooks, verified.** HubSpot pushes a BATCH of
+  events (deal, contact and company created, property changed, deleted,
+  merged, restored, re-associated; which ones is set in the HubSpot app) to
+  the app's target URL. Each delivery is verified with **signature v3**
+  before anything reads it: base64 HMAC-SHA256 of method + URI + body +
+  timestamp under the app's `clientSecret`. The timestamp
+  (`X-HubSpot-Request-Timestamp`) is in MILLISECONDS, with a 5-minute window,
+  and the URI has only its query percent-decoded. HubSpot's own published
+  example verifies in TypeScript, PHP and Python; a changed byte, another
+  method, a late delivery and a missing request line are each refused.
+- **The host must pass the request line.** `verifyHubspotDelivery({raw,
+  headers, method, url})` (js), `CrmEvent::verifyDelivery($raw, $headers,
+  $secret, method: …, url: …)` (php) and `verify_delivery(raw, headers,
+  secret, method=…, url=…)` (python) take the URL exactly as it arrived.
+  Without them a delivery is refused by name, never verified with a gap.
+- **Routing is DECLARED** (`route: {by: "portalId", path: "[].portalId"}`,
+  on the descriptor, as `ROUTE`, and in the registry index). One URL serves
+  every portal that installed the app, so route each event by `portalId`
+  ONLY after the signature verifies, and only to a connection minted when
+  that portal installed. Drop an unmapped portal with a 2xx and a log line,
+  and create nothing.
+
+### Changed
+
+- **Requires `fancy-connector-core` ≥ 0.12.0**, which verifies a signed
+  request line and millisecond timestamps.
+
 ## [0.4.0] — 2026-11-01
 
 ### Added

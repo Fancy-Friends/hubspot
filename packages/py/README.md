@@ -285,6 +285,18 @@ Every property defined on deals, contacts or companies: name, label, type and th
 |---|---|---|
 | `objectType` | yes | Object |
 
+### Triggers
+
+#### `crm_event` — HubSpot CRM event
+
+Start when HubSpot reports deals, contacts or companies created, changed, deleted, merged, restored or re-associated.
+
+Delivered by webhook, and the signature is verified before anything runs.
+
+**You have to set this up with the provider first:**
+
+In the HubSpot app's webhook settings, set the target URL to the route your host mounts for this trigger and subscribe to the deal, contact and company events you want. Deliveries are signed with the app's client secret, already on the connection as `clientSecret`. ONE URL serves every portal that installed the app, so route each event by its portalId, and only after the signature has verified: map portalId to the connection created when that portal installed, and drop an unmapped portalId with a 2xx and a log line, creating nothing.
+
 ## Run it before you have credentials
 
 Every operation ships a **faker**, whether or not HubSpot has a sandbox. Set a

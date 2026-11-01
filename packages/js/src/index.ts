@@ -39,3 +39,4 @@ export * from "./actions/deal-update.js";
 export * from "./actions/owner-list.js";
 export * from "./actions/pipeline-list.js";
 export * from "./actions/property-list.js";
+export * from "./triggers/crm-event.js";
