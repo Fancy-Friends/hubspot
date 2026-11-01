@@ -52,7 +52,7 @@ use ParticleAcademy\Hubspot\Triggers\CrmEvent;
         [
             'path' => '[].eventId',
             'type' => 'number',
-            'description' => 'HubSpot\'s id for this event. HubSpot retries on failure: dedupe on it.',
+            'description' => 'HubSpot\'s id for this event. HubSpot says it is not guaranteed to be unique, so two different events can share one: never treat a repeated eventId alone as a duplicate.',
         ],
         [
             'path' => '[].subscriptionId',
@@ -82,7 +82,7 @@ use ParticleAcademy\Hubspot\Triggers\CrmEvent;
         [
             'path' => '[].attemptNumber',
             'type' => 'number',
-            'description' => '0 on the first delivery, counting up on retries.',
+            'description' => '0 on the first delivery, counting up on retries. A retry differs from the original ONLY here.',
         ],
         [
             'path' => '[].objectId',
