@@ -1,0 +1,84 @@
+<?php
+
+declare(strict_types=1);
+
+namespace ParticleAcademy\Hubspot\Actions;
+
+use ParticleAcademy\Hubspot\Hubspot;
+use ParticleAcademy\Connectors\ConnectorConfigException;
+
+/*
+ * GENERATED FILE — do not edit.
+ *
+ * Emitted from provider/actions/contact-list.json by weaver's generator.
+ * A hand-edit here is destroyed by the next protocol sync, which is worse than
+ * being rejected, because it works until it silently does not. Fix
+ * provider/actions/contact-list.json (or weaver's template/) and regenerate:
+ *
+ *     npm run provider -- hubspot
+ */
+/**
+ * Page through every contact in the portal.
+ *
+ * GET /crm/v3/objects/contacts —
+ * https://developers.hubspot.com/docs/reference/api/crm/objects/contacts
+ *
+ * This describes the request. The connector client resolves the connection,
+ * picks the estate, and either calls HubSpot or calls the faker.
+ */
+final class ContactList
+{
+    public const OPERATION = 'contact_list';
+    public const METHOD = 'GET';
+    public const PATH = '/crm/v3/objects/contacts';
+    public const SIDE_EFFECTS = 'none';
+
+    /**
+     * Build the form body for one call.
+     *
+     * Validation fails loudly and specifically here, rather than three frames
+     * later as an "invalid request" from HubSpot.
+     *
+     * @param array<string,mixed> $config
+     * An EMPTY body is `{}`, not `[]` — and PHP cannot tell those apart, because
+     * both are `array()` and `json_encode` picks the list. So an empty one is
+     * returned as an object. TypeScript and Python have no such ambiguity, which
+     * is why this is a difference only the byte-parity suite can see.
+     *
+     * @return array<string,mixed>|\stdClass
+     */
+    public static function body(array $config): array|\stdClass
+    {
+        $limit = $config['limit'] ?? null;
+        if (($limit !== null && $limit !== '') && ! (is_numeric($limit) && (float) $limit === floor((float) $limit) && (float) $limit >= 1 && (float) $limit <= 100)) {
+            throw new ConnectorConfigException(
+                'contact_list: "limit" must be a integer, got '.json_encode($limit).'.'
+            );
+        }
+
+        $body = [];
+
+        $value = $config['limit'] ?? null;
+        if ($value !== null && $value !== '') {
+            $body['limit'] = (int) $value;
+        }
+
+        $value = $config['after'] ?? null;
+        if ($value !== null && $value !== '') {
+            $body['after'] = (string) $value;
+        }
+
+        $value = $config['properties'] ?? null;
+        if ($value !== null && $value !== '') {
+            $body['properties'] = (string) $value;
+        }
+
+        $value = $config['associations'] ?? null;
+        if ($value !== null && $value !== '') {
+            $body['associations'] = (string) $value;
+        }
+
+        $body = $body === [] ? new \stdClass() : $body;
+        return $body;
+    }
+}

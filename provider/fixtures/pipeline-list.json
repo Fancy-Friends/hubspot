@@ -1,0 +1,6 @@
+{
+  "operation": "pipeline_list",
+  "response": {
+    "results": [{ "id": "default", "label": "Sales pipeline", "displayOrder": 0, "archived": false, "stages": [{ "id": "appointmentscheduled", "label": "Appointment scheduled", "displayOrder": 0, "metadata": { "probability": "0.2" } }, { "id": "closedwon", "label": "Closed won", "displayOrder": 1, "metadata": { "probability": "1.0" } }] }]
+  }
+}

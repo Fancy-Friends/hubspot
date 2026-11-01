@@ -1,0 +1,6 @@
+{
+  "operation": "property_list",
+  "response": {
+    "results": [{ "name": "dealstage", "label": "Deal Stage", "type": "enumeration", "fieldType": "select", "groupName": "dealinformation", "options": [{ "label": "Appointment scheduled", "value": "appointmentscheduled" }] }]
+  }
+}

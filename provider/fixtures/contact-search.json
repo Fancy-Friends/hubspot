@@ -1,0 +1,9 @@
+{
+  "operation": "contact_search",
+  "values": { "record_id": { "$fake": "digits", "length": 9 } },
+  "response": {
+    "total": 1,
+    "results": [{ "id": { "$ref": "record_id" }, "properties": { "email": "rosa@example.test", "firstname": "Rosa", "lastname": "Diaz", "hs_object_id": { "$ref": "record_id" }, "createdate": "2026-01-01T00:00:00.000Z", "lastmodifieddate": "2026-01-01T00:00:00.000Z" }, "createdAt": "2026-01-01T00:00:00.000Z", "updatedAt": "2026-01-01T00:00:00.000Z", "archived": false }],
+    "paging": { "next": { "after": "10", "link": "?after=10" } }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "operation": "pipeline_list",
+  "kind": "pipeline_list",
+  "title": "List deal pipelines",
+  "description": "Every deal pipeline in the portal, with its stages in order.",
+  "summary": "list deal pipelines",
+  "docs": "https://developers.hubspot.com/docs/reference/api/crm/pipelines",
+  "sideEffects": "none",
+  "request": { "method": "GET", "path": "/crm/v3/pipelines/deals" },
+  "config": [],
+  "outputShape": [
+    { "path": "data.results", "type": "array", "description": "Every deal pipeline." },
+    { "path": "data.results[].id", "type": "string", "description": "The pipeline id a deal's pipeline property holds." },
+    { "path": "data.results[].label", "type": "string", "description": "The pipeline's name." },
+    { "path": "data.results[].stages", "type": "array", "description": "Its stages, in display order: id (what dealstage holds), label, displayOrder, metadata.probability." }
+  ],
+  "contract": { "sends": [], "reads": ["results"], "specPath": "/crm/v3/pipelines/{objectType}" }
+}

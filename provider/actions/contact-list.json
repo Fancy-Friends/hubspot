@@ -1,0 +1,26 @@
+{
+  "operation": "contact_list",
+  "kind": "contact_list",
+  "title": "List contacts",
+  "description": "Page through every contact in the portal.",
+  "summary": "list contacts",
+  "docs": "https://developers.hubspot.com/docs/reference/api/crm/objects/contacts",
+  "sideEffects": "none",
+  "request": { "method": "GET", "path": "/crm/v3/objects/contacts" },
+  "config": [
+    { "type": "number", "key": "limit", "label": "Page size", "description": "How many records per page, 1 to 100. HubSpot's own default is 10.", "send": { "in": "query", "as": "limit", "value": "integer", "min": 1, "max": 100 } },
+    { "type": "text", "key": "after", "label": "After (cursor)", "description": "The cursor from the previous page's paging.next.after. Leave empty for the first page.", "send": { "in": "query", "as": "after", "value": "string" } },
+    { "type": "text", "key": "properties", "label": "Properties", "placeholder": "dealname,amount,dealstage", "description": "Comma-separated property names to return. HubSpot returns a small default set otherwise.", "send": { "in": "query", "as": "properties", "value": "string" } },
+    { "type": "text", "key": "associations", "label": "Associations", "placeholder": "companies,contacts", "description": "Comma-separated object types whose associated ids to return.", "send": { "in": "query", "as": "associations", "value": "string" } }
+  ],
+  "outputShape": [
+    { "path": "data.results", "type": "array", "description": "This page of contacts." },
+    { "path": "data.results[].id", "type": "string", "description": "HubSpot's contact id. A NUMERIC STRING, not a number; pass it back as given." },
+    { "path": "data.results[].properties", "type": "object", "description": "The requested properties, every value a string or null." },
+    { "path": "data.results[].createdAt", "type": "string", "description": "ISO 8601 timestamp." },
+    { "path": "data.results[].updatedAt", "type": "string", "description": "ISO 8601 timestamp." },
+    { "path": "data.results[].archived", "type": "boolean", "description": "FALSE for a live record." },
+    { "path": "data.paging.next.after", "type": "string", "description": "Pass this as \"after\" for the next page. Absent on the last page." }
+  ],
+  "contract": { "sends": ["limit", "after", "properties", "associations"], "reads": ["results", "paging"] }
+}

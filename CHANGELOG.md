@@ -7,6 +7,36 @@ The four packages share one version, because they are generated from one
 `provider/` definition and a version that meant something different in each
 would be a version nobody could reason about.
 
+## [0.4.0] — 2026-11-01
+
+### Added
+
+- **The CRM core, read and write: 17 new actions.** For deals, contacts and
+  companies:
+  - `*_search`: property `filterGroups` and `sorts` (nested JSON), a text
+    `query`, the properties to return, and HubSpot's `after` cursor;
+  - `*_list`: page through every record, with `after` in and
+    `paging.next.after` out;
+  - `*_get`: one record, with `associations` when asked;
+  - `deal_create` and `company_create`;
+  - `*_update`: a PATCH of the given properties, declared `idempotent`.
+
+  `contact_create` is unchanged, because saved workflows depend on its
+  fields. Alongside them: `owner_list` (owner ids are NOT user ids; both are
+  published), `pipeline_list` (every deal pipeline with its stages in order)
+  and `property_list` (the property definitions of deals, contacts or
+  companies). Record ids are numeric STRINGS in every runtime.
+
+### Changed
+
+- **Scopes:** the CRM core's read and write scopes for the three objects,
+  plus `crm.objects.owners.read` and `crm.schemas.*.read`. An installation made
+  under 0.3.x granted only `crm.objects.contacts.write`, so it **must be
+  re-authorised** before any new action works.
+- **Drift now checks every action against HubSpot's own v3 documents:**
+  Contacts, Companies, Deals, Owners, Pipelines and Properties. That needs
+  the six documents, because HubSpot publishes the CRM one area per document.
+
 ## [0.3.4] — 2026-09-12
 
 ### Changed

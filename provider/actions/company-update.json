@@ -1,0 +1,23 @@
+{
+  "operation": "company_update",
+  "kind": "company_update",
+  "title": "Update company",
+  "description": "Change properties on an existing company.",
+  "summary": "update a company",
+  "docs": "https://developers.hubspot.com/docs/reference/api/crm/objects/companies",
+  "sideEffects": "idempotent",
+  "$sideEffectsComment": "A PATCH that sets the given properties: sending it again leaves the record as the first one did.",
+  "request": { "method": "PATCH", "path": "/crm/v3/objects/companies/{companyId}", "encoding": "json" },
+  "config": [
+    { "type": "text", "key": "companyId", "label": "Company id", "required": true, "description": "The company's HubSpot id (a numeric string).", "send": { "in": "path", "as": "companyId", "value": "string" } },
+    { "type": "keyvalue", "key": "properties", "label": "Properties", "required": true, "description": "HubSpot property name → value for the company. Values are sent as strings, which is how HubSpot stores every property.", "send": { "in": "body", "as": "properties", "value": "keyvalue", "encoding": "object" } }
+  ],
+  "outputShape": [
+    { "path": "data.id", "type": "string", "description": "HubSpot's company id. A NUMERIC STRING, not a number; pass it back as given." },
+    { "path": "data.properties", "type": "object", "description": "The requested properties, every value a string or null." },
+    { "path": "data.createdAt", "type": "string", "description": "ISO 8601 timestamp." },
+    { "path": "data.updatedAt", "type": "string", "description": "ISO 8601 timestamp." },
+    { "path": "data.archived", "type": "boolean", "description": "FALSE for a live record." }
+  ],
+  "contract": { "sends": ["properties"], "reads": ["id", "properties", "createdAt", "updatedAt", "archived"] }
+}

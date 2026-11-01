@@ -1,0 +1,28 @@
+{
+  "operation": "deal_get",
+  "kind": "deal_get",
+  "title": "Get deal",
+  "description": "Read one deal, with its associations when asked.",
+  "summary": "get a deal",
+  "docs": "https://developers.hubspot.com/docs/reference/api/crm/objects/deals",
+  "sideEffects": "none",
+  "request": { "method": "GET", "path": "/crm/v3/objects/deals/{dealId}" },
+  "config": [
+    { "type": "text", "key": "dealId", "label": "Deal id", "required": true, "description": "The deal's HubSpot id (a numeric string).", "send": { "in": "path", "as": "dealId", "value": "string" } },
+    { "type": "text", "key": "properties", "label": "Properties", "placeholder": "dealname,amount,dealstage", "description": "Comma-separated property names to return. HubSpot returns a small default set otherwise.", "send": { "in": "query", "as": "properties", "value": "string" } },
+    { "type": "text", "key": "associations", "label": "Associations", "placeholder": "companies,contacts", "description": "Comma-separated object types whose associated ids to return.", "send": { "in": "query", "as": "associations", "value": "string" } }
+  ],
+  "outputShape": [
+    { "path": "data.id", "type": "string", "description": "HubSpot's deal id. A NUMERIC STRING, not a number; pass it back as given." },
+    { "path": "data.properties", "type": "object", "description": "The requested properties, every value a string or null." },
+    { "path": "data.createdAt", "type": "string", "description": "ISO 8601 timestamp." },
+    { "path": "data.updatedAt", "type": "string", "description": "ISO 8601 timestamp." },
+    { "path": "data.archived", "type": "boolean", "description": "FALSE for a live record." },
+    { "path": "data.associations", "type": "object", "description": "Associated ids by object type, when associations were asked for." }
+  ],
+  "contract": {
+    "sends": ["properties", "associations"],
+    "reads": ["id", "properties", "createdAt", "updatedAt", "archived", "associations"],
+    "specPath": "/crm/v3/objects/0-3/{dealId}"
+  }
+}

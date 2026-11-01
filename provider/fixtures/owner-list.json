@@ -1,0 +1,8 @@
+{
+  "operation": "owner_list",
+  "values": { "owner_id": { "$fake": "digits", "length": 8 } },
+  "response": {
+    "results": [{ "id": { "$ref": "owner_id" }, "email": "rosa@example.test", "firstName": "Rosa", "lastName": "Diaz", "userId": 4242, "archived": false }],
+    "paging": { "next": { "after": "10", "link": "?after=10" } }
+  }
+}
