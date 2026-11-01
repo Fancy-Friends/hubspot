@@ -52,7 +52,7 @@ HubSpot uses OAuth2 (authorization_code). The package DECLARES the exchange; the
 
 - **Authorize URL** — https://app.hubspot.com/oauth/authorize
 - **Token URL** — https://api.hubapi.com/oauth/v1/token
-- **Scopes** — `crm.objects.contacts.write`
+- **Scopes** — `crm.objects.contacts.read`, `crm.objects.contacts.write`, `crm.objects.companies.read`, `crm.objects.companies.write`, `crm.objects.deals.read`, `crm.objects.deals.write`, `crm.objects.owners.read`, `crm.schemas.contacts.read`, `crm.schemas.companies.read`, `crm.schemas.deals.read`
 - **Access token lifetime** — 1800 seconds (30 minutes). A host that never refreshes works all afternoon and is broken by morning.
 
 The refresh tokens do **not** rotate: the same one is reusable, so a refresh may safely be retried and may run concurrently. Stated rather than assumed, because the opposite — a provider that spends the token and revokes the grant on a replay — looks identical until it happens.
@@ -66,6 +66,67 @@ HubSpot has a test estate on the same host, reached with credentials from a SEPA
 ## What it can do
 
 ### Actions
+
+#### `company_create` — Create company
+
+Create a company in HubSpot.
+
+`POST /crm/v3/objects/companies` · **unsafe to replay** — a retried durable run does it TWICE
+
+| Input | Required | What it is |
+|---|---|---|
+| `properties` | yes | HubSpot property name → value for the new company. Values are sent as strings, which is how HubSpot stores every property. |
+
+#### `company_get` — Get company
+
+Read one company, with its associations when asked.
+
+`GET /crm/v3/objects/companies/{companyId}` · reads only — safe to replay
+
+| Input | Required | What it is |
+|---|---|---|
+| `companyId` | yes | The company's HubSpot id (a numeric string). |
+| `properties` | no | Comma-separated property names to return. HubSpot returns a small default set otherwise. |
+| `associations` | no | Comma-separated object types whose associated ids to return. |
+
+#### `company_list` — List companies
+
+Page through every company in the portal.
+
+`GET /crm/v3/objects/companies` · reads only — safe to replay
+
+| Input | Required | What it is |
+|---|---|---|
+| `limit` | no | How many records per page, 1 to 100. HubSpot's own default is 10. |
+| `after` | no | The cursor from the previous page's paging.next.after. Leave empty for the first page. |
+| `properties` | no | Comma-separated property names to return. HubSpot returns a small default set otherwise. |
+| `associations` | no | Comma-separated object types whose associated ids to return. |
+
+#### `company_search` — Search companies
+
+Find companies by property filters, sorts or a text query.
+
+`POST /crm/v3/objects/companies/search` · reads only — safe to replay
+
+| Input | Required | What it is |
+|---|---|---|
+| `filterGroups` | no | HubSpot's filterGroups: groups are ORed, filters inside a group are ANDed. Example: [{"filters":[{"propertyName":"amount","operator":"GT","value":"1000"}]}]. |
+| `sorts` | no | Example: [{"propertyName":"createdate","direction":"DESCENDING"}]. |
+| `query` | no | Searches the object's default text properties. |
+| `properties` | no | Comma-separated property names to return. |
+| `limit` | no | 1 to 200. |
+| `after` | no | The cursor from the previous page's paging.next.after. |
+
+#### `company_update` — Update company
+
+Change properties on an existing company.
+
+`PATCH /crm/v3/objects/companies/{companyId}` · idempotent — safe to replay
+
+| Input | Required | What it is |
+|---|---|---|
+| `companyId` | yes | The company's HubSpot id (a numeric string). |
+| `properties` | yes | HubSpot property name → value for the company. Values are sent as strings, which is how HubSpot stores every property. |
 
 #### `contact_create` — Create contact
 
@@ -81,6 +142,148 @@ Create a contact in HubSpot.
 | `company` | no | Company |
 | `phone` | no | Phone |
 | `lifecycleStage` | no | HubSpot's own stage names. A value it does not recognise is refused at write time, not at setup. |
+
+#### `contact_get` — Get contact
+
+Read one contact, with its associations when asked.
+
+`GET /crm/v3/objects/contacts/{contactId}` · reads only — safe to replay
+
+| Input | Required | What it is |
+|---|---|---|
+| `contactId` | yes | The contact's HubSpot id (a numeric string). |
+| `properties` | no | Comma-separated property names to return. HubSpot returns a small default set otherwise. |
+| `associations` | no | Comma-separated object types whose associated ids to return. |
+
+#### `contact_list` — List contacts
+
+Page through every contact in the portal.
+
+`GET /crm/v3/objects/contacts` · reads only — safe to replay
+
+| Input | Required | What it is |
+|---|---|---|
+| `limit` | no | How many records per page, 1 to 100. HubSpot's own default is 10. |
+| `after` | no | The cursor from the previous page's paging.next.after. Leave empty for the first page. |
+| `properties` | no | Comma-separated property names to return. HubSpot returns a small default set otherwise. |
+| `associations` | no | Comma-separated object types whose associated ids to return. |
+
+#### `contact_search` — Search contacts
+
+Find contacts by property filters, sorts or a text query.
+
+`POST /crm/v3/objects/contacts/search` · reads only — safe to replay
+
+| Input | Required | What it is |
+|---|---|---|
+| `filterGroups` | no | HubSpot's filterGroups: groups are ORed, filters inside a group are ANDed. Example: [{"filters":[{"propertyName":"amount","operator":"GT","value":"1000"}]}]. |
+| `sorts` | no | Example: [{"propertyName":"createdate","direction":"DESCENDING"}]. |
+| `query` | no | Searches the object's default text properties. |
+| `properties` | no | Comma-separated property names to return. |
+| `limit` | no | 1 to 200. |
+| `after` | no | The cursor from the previous page's paging.next.after. |
+
+#### `contact_update` — Update contact
+
+Change properties on an existing contact.
+
+`PATCH /crm/v3/objects/contacts/{contactId}` · idempotent — safe to replay
+
+| Input | Required | What it is |
+|---|---|---|
+| `contactId` | yes | The contact's HubSpot id (a numeric string). |
+| `properties` | yes | HubSpot property name → value for the contact. Values are sent as strings, which is how HubSpot stores every property. |
+
+#### `deal_create` — Create deal
+
+Create a deal in HubSpot.
+
+`POST /crm/v3/objects/deals` · **unsafe to replay** — a retried durable run does it TWICE
+
+| Input | Required | What it is |
+|---|---|---|
+| `properties` | yes | HubSpot property name → value for the new deal. Values are sent as strings, which is how HubSpot stores every property. |
+
+#### `deal_get` — Get deal
+
+Read one deal, with its associations when asked.
+
+`GET /crm/v3/objects/deals/{dealId}` · reads only — safe to replay
+
+| Input | Required | What it is |
+|---|---|---|
+| `dealId` | yes | The deal's HubSpot id (a numeric string). |
+| `properties` | no | Comma-separated property names to return. HubSpot returns a small default set otherwise. |
+| `associations` | no | Comma-separated object types whose associated ids to return. |
+
+#### `deal_list` — List deals
+
+Page through every deal in the portal.
+
+`GET /crm/v3/objects/deals` · reads only — safe to replay
+
+| Input | Required | What it is |
+|---|---|---|
+| `limit` | no | How many records per page, 1 to 100. HubSpot's own default is 10. |
+| `after` | no | The cursor from the previous page's paging.next.after. Leave empty for the first page. |
+| `properties` | no | Comma-separated property names to return. HubSpot returns a small default set otherwise. |
+| `associations` | no | Comma-separated object types whose associated ids to return. |
+
+#### `deal_search` — Search deals
+
+Find deals by property filters, sorts or a text query.
+
+`POST /crm/v3/objects/deals/search` · reads only — safe to replay
+
+| Input | Required | What it is |
+|---|---|---|
+| `filterGroups` | no | HubSpot's filterGroups: groups are ORed, filters inside a group are ANDed. Example: [{"filters":[{"propertyName":"amount","operator":"GT","value":"1000"}]}]. |
+| `sorts` | no | Example: [{"propertyName":"createdate","direction":"DESCENDING"}]. |
+| `query` | no | Searches the object's default text properties. |
+| `properties` | no | Comma-separated property names to return. |
+| `limit` | no | 1 to 200. |
+| `after` | no | The cursor from the previous page's paging.next.after. |
+
+#### `deal_update` — Update deal
+
+Change properties on an existing deal.
+
+`PATCH /crm/v3/objects/deals/{dealId}` · idempotent — safe to replay
+
+| Input | Required | What it is |
+|---|---|---|
+| `dealId` | yes | The deal's HubSpot id (a numeric string). |
+| `properties` | yes | HubSpot property name → value for the deal. Values are sent as strings, which is how HubSpot stores every property. |
+
+#### `owner_list` — List owners
+
+Page through the portal's owners: the users records can be assigned to.
+
+`GET /crm/v3/owners` · reads only — safe to replay
+
+| Input | Required | What it is |
+|---|---|---|
+| `email` | no | Only the owner with this email. |
+| `limit` | no | How many records per page, 1 to 100. HubSpot's own default is 10. |
+| `after` | no | The cursor from the previous page's paging.next.after. Leave empty for the first page. |
+
+#### `pipeline_list` — List deal pipelines
+
+Every deal pipeline in the portal, with its stages in order.
+
+`GET /crm/v3/pipelines/deals` · reads only — safe to replay
+
+Takes no input.
+
+#### `property_list` — List property definitions
+
+Every property defined on deals, contacts or companies: name, label, type and the options of an enumeration.
+
+`GET /crm/v3/properties/{objectType}` · reads only — safe to replay
+
+| Input | Required | What it is |
+|---|---|---|
+| `objectType` | yes | Object |
 
 ## Run it before you have credentials
 

@@ -35,7 +35,24 @@ final class HubspotFaker
         $fake = $request['fake'];
 
         return match ($operation) {
+            'company_create' => self::CompanyCreate($config, $fake),
+            'company_get' => self::CompanyGet($config, $fake),
+            'company_list' => self::CompanyList($config, $fake),
+            'company_search' => self::CompanySearch($config, $fake),
+            'company_update' => self::CompanyUpdate($config, $fake),
             'contact_create' => self::ContactCreate($config, $fake),
+            'contact_get' => self::ContactGet($config, $fake),
+            'contact_list' => self::ContactList($config, $fake),
+            'contact_search' => self::ContactSearch($config, $fake),
+            'contact_update' => self::ContactUpdate($config, $fake),
+            'deal_create' => self::DealCreate($config, $fake),
+            'deal_get' => self::DealGet($config, $fake),
+            'deal_list' => self::DealList($config, $fake),
+            'deal_search' => self::DealSearch($config, $fake),
+            'deal_update' => self::DealUpdate($config, $fake),
+            'owner_list' => self::OwnerList($config, $fake),
+            'pipeline_list' => self::PipelineList($config, $fake),
+            'property_list' => self::PropertyList($config, $fake),
             default => throw new \InvalidArgumentException(
                 // A faker asked for an operation it has no shape for must SAY so.
                 // Making something up would produce a green run whose output
@@ -45,6 +62,127 @@ final class HubspotFaker
                     .'cannot be developed against, tested, or demonstrated.'
             ),
         };
+    }
+
+    /** @param array<string,mixed> $config */
+    private static function CompanyCreate(array $config, mixed $fake): array|\stdClass
+    {
+        $boundRecordId = implode('', array_map(static fn (): int => $fake->int(0, 9), range(1, 9)));
+
+        return [
+        'id' => $boundRecordId,
+        'properties' => [
+            'name' => 'Acme',
+            'domain' => 'acme.example.test',
+            'hs_object_id' => $boundRecordId,
+            'createdate' => '2026-01-01T00:00:00.000Z',
+            'lastmodifieddate' => '2026-01-01T00:00:00.000Z',
+        ],
+        'createdAt' => '2026-01-01T00:00:00.000Z',
+        'updatedAt' => '2026-01-01T00:00:00.000Z',
+        'archived' => false,
+    ];
+    }
+
+    /** @param array<string,mixed> $config */
+    private static function CompanyGet(array $config, mixed $fake): array|\stdClass
+    {
+        $boundRecordId = implode('', array_map(static fn (): int => $fake->int(0, 9), range(1, 9)));
+
+        return [
+        'id' => $boundRecordId,
+        'properties' => [
+            'name' => 'Acme',
+            'domain' => 'acme.example.test',
+            'hs_object_id' => $boundRecordId,
+            'createdate' => '2026-01-01T00:00:00.000Z',
+            'lastmodifieddate' => '2026-01-01T00:00:00.000Z',
+        ],
+        'createdAt' => '2026-01-01T00:00:00.000Z',
+        'updatedAt' => '2026-01-01T00:00:00.000Z',
+        'archived' => false,
+    ];
+    }
+
+    /** @param array<string,mixed> $config */
+    private static function CompanyList(array $config, mixed $fake): array|\stdClass
+    {
+        $boundRecordId = implode('', array_map(static fn (): int => $fake->int(0, 9), range(1, 9)));
+
+        return [
+        'results' => [
+            [
+                'id' => $boundRecordId,
+                'properties' => [
+                    'name' => 'Acme',
+                    'domain' => 'acme.example.test',
+                    'hs_object_id' => $boundRecordId,
+                    'createdate' => '2026-01-01T00:00:00.000Z',
+                    'lastmodifieddate' => '2026-01-01T00:00:00.000Z',
+                ],
+                'createdAt' => '2026-01-01T00:00:00.000Z',
+                'updatedAt' => '2026-01-01T00:00:00.000Z',
+                'archived' => false,
+            ],
+        ],
+        'paging' => [
+            'next' => [
+                'after' => '10',
+                'link' => '?after=10',
+            ],
+        ],
+    ];
+    }
+
+    /** @param array<string,mixed> $config */
+    private static function CompanySearch(array $config, mixed $fake): array|\stdClass
+    {
+        $boundRecordId = implode('', array_map(static fn (): int => $fake->int(0, 9), range(1, 9)));
+
+        return [
+        'total' => 1,
+        'results' => [
+            [
+                'id' => $boundRecordId,
+                'properties' => [
+                    'name' => 'Acme',
+                    'domain' => 'acme.example.test',
+                    'hs_object_id' => $boundRecordId,
+                    'createdate' => '2026-01-01T00:00:00.000Z',
+                    'lastmodifieddate' => '2026-01-01T00:00:00.000Z',
+                ],
+                'createdAt' => '2026-01-01T00:00:00.000Z',
+                'updatedAt' => '2026-01-01T00:00:00.000Z',
+                'archived' => false,
+            ],
+        ],
+        'paging' => [
+            'next' => [
+                'after' => '10',
+                'link' => '?after=10',
+            ],
+        ],
+    ];
+    }
+
+    /** @param array<string,mixed> $config */
+    private static function CompanyUpdate(array $config, mixed $fake): array|\stdClass
+    {
+        $boundRecordId = implode('', array_map(static fn (): int => $fake->int(0, 9), range(1, 9)));
+
+        return [
+        'id' => $boundRecordId,
+        'properties' => [
+            'name' => 'Acme',
+            'domain' => 'acme.example.test',
+            'hs_object_id' => $boundRecordId,
+            'createdate' => '2026-01-01T00:00:00.000Z',
+            'lastmodifieddate' => '2026-01-01T00:00:00.000Z',
+        ],
+        'createdAt' => '2026-01-01T00:00:00.000Z',
+        'updatedAt' => '2026-01-01T00:00:00.000Z',
+        'archived' => false,
+    ];
     }
 
     /** @param array<string,mixed> $config */
@@ -68,6 +206,322 @@ final class HubspotFaker
         'createdAt' => '2026-01-01T00:00:00.000Z',
         'updatedAt' => '2026-01-01T00:00:00.000Z',
         'archived' => false,
+    ];
+    }
+
+    /** @param array<string,mixed> $config */
+    private static function ContactGet(array $config, mixed $fake): array|\stdClass
+    {
+        $boundRecordId = implode('', array_map(static fn (): int => $fake->int(0, 9), range(1, 9)));
+
+        return [
+        'id' => $boundRecordId,
+        'properties' => [
+            'email' => 'rosa@example.test',
+            'firstname' => 'Rosa',
+            'lastname' => 'Diaz',
+            'hs_object_id' => $boundRecordId,
+            'createdate' => '2026-01-01T00:00:00.000Z',
+            'lastmodifieddate' => '2026-01-01T00:00:00.000Z',
+        ],
+        'createdAt' => '2026-01-01T00:00:00.000Z',
+        'updatedAt' => '2026-01-01T00:00:00.000Z',
+        'archived' => false,
+    ];
+    }
+
+    /** @param array<string,mixed> $config */
+    private static function ContactList(array $config, mixed $fake): array|\stdClass
+    {
+        $boundRecordId = implode('', array_map(static fn (): int => $fake->int(0, 9), range(1, 9)));
+
+        return [
+        'results' => [
+            [
+                'id' => $boundRecordId,
+                'properties' => [
+                    'email' => 'rosa@example.test',
+                    'firstname' => 'Rosa',
+                    'lastname' => 'Diaz',
+                    'hs_object_id' => $boundRecordId,
+                    'createdate' => '2026-01-01T00:00:00.000Z',
+                    'lastmodifieddate' => '2026-01-01T00:00:00.000Z',
+                ],
+                'createdAt' => '2026-01-01T00:00:00.000Z',
+                'updatedAt' => '2026-01-01T00:00:00.000Z',
+                'archived' => false,
+            ],
+        ],
+        'paging' => [
+            'next' => [
+                'after' => '10',
+                'link' => '?after=10',
+            ],
+        ],
+    ];
+    }
+
+    /** @param array<string,mixed> $config */
+    private static function ContactSearch(array $config, mixed $fake): array|\stdClass
+    {
+        $boundRecordId = implode('', array_map(static fn (): int => $fake->int(0, 9), range(1, 9)));
+
+        return [
+        'total' => 1,
+        'results' => [
+            [
+                'id' => $boundRecordId,
+                'properties' => [
+                    'email' => 'rosa@example.test',
+                    'firstname' => 'Rosa',
+                    'lastname' => 'Diaz',
+                    'hs_object_id' => $boundRecordId,
+                    'createdate' => '2026-01-01T00:00:00.000Z',
+                    'lastmodifieddate' => '2026-01-01T00:00:00.000Z',
+                ],
+                'createdAt' => '2026-01-01T00:00:00.000Z',
+                'updatedAt' => '2026-01-01T00:00:00.000Z',
+                'archived' => false,
+            ],
+        ],
+        'paging' => [
+            'next' => [
+                'after' => '10',
+                'link' => '?after=10',
+            ],
+        ],
+    ];
+    }
+
+    /** @param array<string,mixed> $config */
+    private static function ContactUpdate(array $config, mixed $fake): array|\stdClass
+    {
+        $boundRecordId = implode('', array_map(static fn (): int => $fake->int(0, 9), range(1, 9)));
+
+        return [
+        'id' => $boundRecordId,
+        'properties' => [
+            'email' => 'rosa@example.test',
+            'firstname' => 'Rosa',
+            'lastname' => 'Diaz',
+            'hs_object_id' => $boundRecordId,
+            'createdate' => '2026-01-01T00:00:00.000Z',
+            'lastmodifieddate' => '2026-01-01T00:00:00.000Z',
+        ],
+        'createdAt' => '2026-01-01T00:00:00.000Z',
+        'updatedAt' => '2026-01-01T00:00:00.000Z',
+        'archived' => false,
+    ];
+    }
+
+    /** @param array<string,mixed> $config */
+    private static function DealCreate(array $config, mixed $fake): array|\stdClass
+    {
+        $boundRecordId = implode('', array_map(static fn (): int => $fake->int(0, 9), range(1, 9)));
+
+        return [
+        'id' => $boundRecordId,
+        'properties' => [
+            'dealname' => 'Acme renewal',
+            'amount' => '12000',
+            'dealstage' => 'appointmentscheduled',
+            'pipeline' => 'default',
+            'hs_object_id' => $boundRecordId,
+            'createdate' => '2026-01-01T00:00:00.000Z',
+            'lastmodifieddate' => '2026-01-01T00:00:00.000Z',
+        ],
+        'createdAt' => '2026-01-01T00:00:00.000Z',
+        'updatedAt' => '2026-01-01T00:00:00.000Z',
+        'archived' => false,
+    ];
+    }
+
+    /** @param array<string,mixed> $config */
+    private static function DealGet(array $config, mixed $fake): array|\stdClass
+    {
+        $boundRecordId = implode('', array_map(static fn (): int => $fake->int(0, 9), range(1, 9)));
+
+        return [
+        'id' => $boundRecordId,
+        'properties' => [
+            'dealname' => 'Acme renewal',
+            'amount' => '12000',
+            'dealstage' => 'appointmentscheduled',
+            'pipeline' => 'default',
+            'hs_object_id' => $boundRecordId,
+            'createdate' => '2026-01-01T00:00:00.000Z',
+            'lastmodifieddate' => '2026-01-01T00:00:00.000Z',
+        ],
+        'createdAt' => '2026-01-01T00:00:00.000Z',
+        'updatedAt' => '2026-01-01T00:00:00.000Z',
+        'archived' => false,
+    ];
+    }
+
+    /** @param array<string,mixed> $config */
+    private static function DealList(array $config, mixed $fake): array|\stdClass
+    {
+        $boundRecordId = implode('', array_map(static fn (): int => $fake->int(0, 9), range(1, 9)));
+
+        return [
+        'results' => [
+            [
+                'id' => $boundRecordId,
+                'properties' => [
+                    'dealname' => 'Acme renewal',
+                    'amount' => '12000',
+                    'dealstage' => 'appointmentscheduled',
+                    'pipeline' => 'default',
+                    'hs_object_id' => $boundRecordId,
+                    'createdate' => '2026-01-01T00:00:00.000Z',
+                    'lastmodifieddate' => '2026-01-01T00:00:00.000Z',
+                ],
+                'createdAt' => '2026-01-01T00:00:00.000Z',
+                'updatedAt' => '2026-01-01T00:00:00.000Z',
+                'archived' => false,
+            ],
+        ],
+        'paging' => [
+            'next' => [
+                'after' => '10',
+                'link' => '?after=10',
+            ],
+        ],
+    ];
+    }
+
+    /** @param array<string,mixed> $config */
+    private static function DealSearch(array $config, mixed $fake): array|\stdClass
+    {
+        $boundRecordId = implode('', array_map(static fn (): int => $fake->int(0, 9), range(1, 9)));
+
+        return [
+        'total' => 1,
+        'results' => [
+            [
+                'id' => $boundRecordId,
+                'properties' => [
+                    'dealname' => 'Acme renewal',
+                    'amount' => '12000',
+                    'dealstage' => 'appointmentscheduled',
+                    'pipeline' => 'default',
+                    'hs_object_id' => $boundRecordId,
+                    'createdate' => '2026-01-01T00:00:00.000Z',
+                    'lastmodifieddate' => '2026-01-01T00:00:00.000Z',
+                ],
+                'createdAt' => '2026-01-01T00:00:00.000Z',
+                'updatedAt' => '2026-01-01T00:00:00.000Z',
+                'archived' => false,
+            ],
+        ],
+        'paging' => [
+            'next' => [
+                'after' => '10',
+                'link' => '?after=10',
+            ],
+        ],
+    ];
+    }
+
+    /** @param array<string,mixed> $config */
+    private static function DealUpdate(array $config, mixed $fake): array|\stdClass
+    {
+        $boundRecordId = implode('', array_map(static fn (): int => $fake->int(0, 9), range(1, 9)));
+
+        return [
+        'id' => $boundRecordId,
+        'properties' => [
+            'dealname' => 'Acme renewal',
+            'amount' => '12000',
+            'dealstage' => 'appointmentscheduled',
+            'pipeline' => 'default',
+            'hs_object_id' => $boundRecordId,
+            'createdate' => '2026-01-01T00:00:00.000Z',
+            'lastmodifieddate' => '2026-01-01T00:00:00.000Z',
+        ],
+        'createdAt' => '2026-01-01T00:00:00.000Z',
+        'updatedAt' => '2026-01-01T00:00:00.000Z',
+        'archived' => false,
+    ];
+    }
+
+    /** @param array<string,mixed> $config */
+    private static function OwnerList(array $config, mixed $fake): array|\stdClass
+    {
+        $boundOwnerId = implode('', array_map(static fn (): int => $fake->int(0, 9), range(1, 8)));
+
+        return [
+        'results' => [
+            [
+                'id' => $boundOwnerId,
+                'email' => 'rosa@example.test',
+                'firstName' => 'Rosa',
+                'lastName' => 'Diaz',
+                'userId' => 4242,
+                'archived' => false,
+            ],
+        ],
+        'paging' => [
+            'next' => [
+                'after' => '10',
+                'link' => '?after=10',
+            ],
+        ],
+    ];
+    }
+
+    /** @param array<string,mixed> $config */
+    private static function PipelineList(array $config, mixed $fake): array|\stdClass
+    {
+        return [
+        'results' => [
+            [
+                'id' => 'default',
+                'label' => 'Sales pipeline',
+                'displayOrder' => 0,
+                'archived' => false,
+                'stages' => [
+                    [
+                        'id' => 'appointmentscheduled',
+                        'label' => 'Appointment scheduled',
+                        'displayOrder' => 0,
+                        'metadata' => [
+                            'probability' => '0.2',
+                        ],
+                    ],
+                    [
+                        'id' => 'closedwon',
+                        'label' => 'Closed won',
+                        'displayOrder' => 1,
+                        'metadata' => [
+                            'probability' => '1.0',
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ];
+    }
+
+    /** @param array<string,mixed> $config */
+    private static function PropertyList(array $config, mixed $fake): array|\stdClass
+    {
+        return [
+        'results' => [
+            [
+                'name' => 'dealstage',
+                'label' => 'Deal Stage',
+                'type' => 'enumeration',
+                'fieldType' => 'select',
+                'groupName' => 'dealinformation',
+                'options' => [
+                    [
+                        'label' => 'Appointment scheduled',
+                        'value' => 'appointmentscheduled',
+                    ],
+                ],
+            ],
+        ],
     ];
     }
 }

@@ -38,7 +38,24 @@ final class HubspotFlow
 {
     /** @var list<class-string> */
     public const EXECUTORS = [
+        CompanyCreateExecutor::class,
+        CompanyGetExecutor::class,
+        CompanyListExecutor::class,
+        CompanySearchExecutor::class,
+        CompanyUpdateExecutor::class,
         ContactCreateExecutor::class,
+        ContactGetExecutor::class,
+        ContactListExecutor::class,
+        ContactSearchExecutor::class,
+        ContactUpdateExecutor::class,
+        DealCreateExecutor::class,
+        DealGetExecutor::class,
+        DealListExecutor::class,
+        DealSearchExecutor::class,
+        DealUpdateExecutor::class,
+        OwnerListExecutor::class,
+        PipelineListExecutor::class,
+        PropertyListExecutor::class,
     ];
 
     /**

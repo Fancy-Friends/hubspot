@@ -17,11 +17,28 @@ dependency.
 from __future__ import annotations
 
 from ._fake import FakeValues
+from .actions.company_create import company_create
+from .actions.company_get import company_get
+from .actions.company_list import company_list
+from .actions.company_search import company_search
+from .actions.company_update import company_update
 from .actions.contact_create import contact_create
+from .actions.contact_get import contact_get
+from .actions.contact_list import contact_list
+from .actions.contact_search import contact_search
+from .actions.contact_update import contact_update
+from .actions.deal_create import deal_create
+from .actions.deal_get import deal_get
+from .actions.deal_list import deal_list
+from .actions.deal_search import deal_search
+from .actions.deal_update import deal_update
+from .actions.owner_list import owner_list
+from .actions.pipeline_list import pipeline_list
+from .actions.property_list import property_list
 from .faker import respond
 from .service import BASE_URLS, CONNECTOR_API_VERSION, REQUIRES, SANDBOX, SERVICE, TITLE, descriptor
 
-__version__ = "0.3.4"
+__version__ = "0.4.0"
 
 __all__ = [
     "BASE_URLS",
@@ -31,7 +48,24 @@ __all__ = [
     "SERVICE",
     "TITLE",
     "FakeValues",
+    "company_create",
+    "company_get",
+    "company_list",
+    "company_search",
+    "company_update",
     "contact_create",
+    "contact_get",
+    "contact_list",
+    "contact_search",
+    "contact_update",
+    "deal_create",
+    "deal_get",
+    "deal_list",
+    "deal_search",
+    "deal_update",
     "descriptor",
+    "owner_list",
+    "pipeline_list",
+    "property_list",
     "respond",
 ]

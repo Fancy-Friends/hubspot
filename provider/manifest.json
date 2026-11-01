@@ -22,7 +22,14 @@
     "flow": "authorization_code",
     "authorizeUrl": "https://app.hubspot.com/oauth/authorize",
     "tokenUrl": "https://api.hubapi.com/oauth/v1/token",
-    "scopes": ["crm.objects.contacts.write"],
+    "scopes": [
+      "crm.objects.contacts.read", "crm.objects.contacts.write",
+      "crm.objects.companies.read", "crm.objects.companies.write",
+      "crm.objects.deals.read", "crm.objects.deals.write",
+      "crm.objects.owners.read",
+      "crm.schemas.contacts.read", "crm.schemas.companies.read", "crm.schemas.deals.read"
+    ],
+    "$scopeComment": "The CRM core, read and write, and nothing outside it: the three objects, their owners, and their property definitions (crm.schemas.*). Deal pipelines are read under crm.objects.deals.read. An installation made under 0.3.x granted only contacts.write, so it must be RE-AUTHORISED before any other action works.",
     "accessTokenCredential": "accessToken",
     "refreshTokenCredential": "refreshToken",
     "$refreshTokenRotates": "Reusable. HubSpot: \"You get one refresh token per installation, and as long as that installation is active, you can keep using it to get new access tokens.\" They do not expire; an uninstall is what kills one.",

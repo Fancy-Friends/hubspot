@@ -33,6 +33,23 @@ test("every kind declares what it emits", () => {
 
 test("the registry names are exactly what the manifest says", () => {
   assert.deepEqual(HUBSPOT_KINDS.map((kind) => kind.name), [
-    "@particle-academy/hubspot_contact_create"
+    "@particle-academy/hubspot_company_create",
+    "@particle-academy/hubspot_company_get",
+    "@particle-academy/hubspot_company_list",
+    "@particle-academy/hubspot_company_search",
+    "@particle-academy/hubspot_company_update",
+    "@particle-academy/hubspot_contact_create",
+    "@particle-academy/hubspot_contact_get",
+    "@particle-academy/hubspot_contact_list",
+    "@particle-academy/hubspot_contact_search",
+    "@particle-academy/hubspot_contact_update",
+    "@particle-academy/hubspot_deal_create",
+    "@particle-academy/hubspot_deal_get",
+    "@particle-academy/hubspot_deal_list",
+    "@particle-academy/hubspot_deal_search",
+    "@particle-academy/hubspot_deal_update",
+    "@particle-academy/hubspot_owner_list",
+    "@particle-academy/hubspot_pipeline_list",
+    "@particle-academy/hubspot_property_list"
   ]);
 });

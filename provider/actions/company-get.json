@@ -1,0 +1,27 @@
+{
+  "operation": "company_get",
+  "kind": "company_get",
+  "title": "Get company",
+  "description": "Read one company, with its associations when asked.",
+  "summary": "get a company",
+  "docs": "https://developers.hubspot.com/docs/reference/api/crm/objects/companies",
+  "sideEffects": "none",
+  "request": { "method": "GET", "path": "/crm/v3/objects/companies/{companyId}" },
+  "config": [
+    { "type": "text", "key": "companyId", "label": "Company id", "required": true, "description": "The company's HubSpot id (a numeric string).", "send": { "in": "path", "as": "companyId", "value": "string" } },
+    { "type": "text", "key": "properties", "label": "Properties", "placeholder": "dealname,amount,dealstage", "description": "Comma-separated property names to return. HubSpot returns a small default set otherwise.", "send": { "in": "query", "as": "properties", "value": "string" } },
+    { "type": "text", "key": "associations", "label": "Associations", "placeholder": "companies,contacts", "description": "Comma-separated object types whose associated ids to return.", "send": { "in": "query", "as": "associations", "value": "string" } }
+  ],
+  "outputShape": [
+    { "path": "data.id", "type": "string", "description": "HubSpot's company id. A NUMERIC STRING, not a number; pass it back as given." },
+    { "path": "data.properties", "type": "object", "description": "The requested properties, every value a string or null." },
+    { "path": "data.createdAt", "type": "string", "description": "ISO 8601 timestamp." },
+    { "path": "data.updatedAt", "type": "string", "description": "ISO 8601 timestamp." },
+    { "path": "data.archived", "type": "boolean", "description": "FALSE for a live record." },
+    { "path": "data.associations", "type": "object", "description": "Associated ids by object type, when associations were asked for." }
+  ],
+  "contract": {
+    "sends": ["properties", "associations"],
+    "reads": ["id", "properties", "createdAt", "updatedAt", "archived", "associations"]
+  }
+}

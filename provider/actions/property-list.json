@@ -1,0 +1,22 @@
+{
+  "operation": "property_list",
+  "kind": "property_list",
+  "title": "List property definitions",
+  "description": "Every property defined on deals, contacts or companies: name, label, type and the options of an enumeration.",
+  "summary": "list property definitions",
+  "docs": "https://developers.hubspot.com/docs/reference/api/crm/properties",
+  "sideEffects": "none",
+  "request": { "method": "GET", "path": "/crm/v3/properties/{objectType}" },
+  "config": [
+    { "type": "select", "key": "objectType", "label": "Object", "required": true, "options": [{ "value": "deals", "label": "Deals" }, { "value": "contacts", "label": "Contacts" }, { "value": "companies", "label": "Companies" }], "send": { "in": "path", "as": "objectType", "value": "string" } }
+  ],
+  "outputShape": [
+    { "path": "data.results", "type": "array", "description": "Every property definition on the object." },
+    { "path": "data.results[].name", "type": "string", "description": "The internal name a record's properties are keyed by." },
+    { "path": "data.results[].label", "type": "string", "description": "The display label." },
+    { "path": "data.results[].type", "type": "string", "description": "string, number, date, datetime, enumeration, bool." },
+    { "path": "data.results[].fieldType", "type": "string", "description": "How HubSpot renders it: text, select, checkbox, …" },
+    { "path": "data.results[].options", "type": "array", "description": "An enumeration's options: label, value." }
+  ],
+  "contract": { "sends": [], "reads": ["results"] }
+}
