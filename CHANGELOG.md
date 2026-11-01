@@ -7,6 +7,17 @@ The four packages share one version, because they are generated from one
 `provider/` definition and a version that meant something different in each
 would be a version nobody could reason about.
 
+## [Unreleased]
+
+### Fixed
+
+- **`crm_event` no longer tells a host to dedupe on `eventId`.** HubSpot's
+  field table says `eventId` "is not guaranteed to be unique", so deduping on
+  it can drop a DIFFERENT event that shares one, such as two properties of one
+  deal changing together. The setup text and the `eventId` / `attemptNumber`
+  descriptions now say what a retry is: the same event resent, differing only
+  in `attemptNumber`, so a host compares every other field. Found by MOIC.
+
 ## [0.5.0] — 2026-11-01
 
 ### Added

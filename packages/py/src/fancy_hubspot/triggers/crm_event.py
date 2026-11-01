@@ -30,7 +30,9 @@ SETUP = (
     "`clientSecret`. ONE URL serves every portal that installed the app, so route each event "
     "by its portalId, and only after the signature has verified: map portalId to the "
     "connection created when that portal installed, and drop an unmapped portalId with a 2xx "
-    "and a log line, creating nothing."
+    "and a log line, creating nothing. HubSpot retries a failed delivery, and eventId is not "
+    "guaranteed to be unique, so never dedupe on eventId alone: a retry is the same event "
+    "resent, differing only in attemptNumber, so compare every other field."
 )
 ROUTE: dict[str, str] = {"by": "portalId", "path": "[].portalId"}
 SIGNATURE_HEADER = "X-HubSpot-Signature-v3"
