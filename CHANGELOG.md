@@ -17,6 +17,12 @@ would be a version nobody could reason about.
   deal changing together. The setup text and the `eventId` / `attemptNumber`
   descriptions now say what a retry is: the same event resent, differing only
   in `attemptNumber`, so a host compares every other field. Found by MOIC.
+- **The setup guidance now says a host does not copy this connector's scope
+  list into its consent URL.** The list covers every action, read and write.
+  HubSpot requires the scopes an app marks required in the authorize URL's
+  `scope` parameter and shows an error otherwise, so a read-only host asks for
+  its read scopes only. On the `accessToken` credential's help and in
+  `crm_event`'s setup. Found by MOIC. The list itself is unchanged.
 
 ## [0.5.0] — 2026-11-01
 

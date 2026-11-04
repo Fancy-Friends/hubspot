@@ -32,7 +32,11 @@ SETUP = (
     "connection created when that portal installed, and drop an unmapped portalId with a 2xx "
     "and a log line, creating nothing. HubSpot retries a failed delivery, and eventId is not "
     "guaranteed to be unique, so never dedupe on eventId alone: a retry is the same event "
-    "resent, differing only in attemptNumber, so compare every other field."
+    "resent, differing only in attemptNumber, so compare every other field. This connector's "
+    "scope list covers every action, read and write, and is not what your consent URL must "
+    "ask for: HubSpot requires your app's required scopes in the authorize URL's `scope` "
+    "parameter and shows an error otherwise, so build it from your own app's configuration. A "
+    "read-only host asks for its read scopes only."
 )
 ROUTE: dict[str, str] = {"by": "portalId", "path": "[].portalId"}
 SIGNATURE_HEADER = "X-HubSpot-Signature-v3"

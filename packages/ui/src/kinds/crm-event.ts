@@ -25,7 +25,11 @@
  * and a log line, creating nothing. HubSpot retries a failed delivery, and
  * eventId is not guaranteed to be unique, so never dedupe on eventId alone: a
  * retry is the same event resent, differing only in attemptNumber, so compare
- * every other field.
+ * every other field. This connector's scope list covers every action, read and
+ * write, and is not what your consent URL must ask for: HubSpot requires your
+ * app's required scopes in the authorize URL's `scope` parameter and shows an
+ * error otherwise, so build it from your own app's configuration. A read-only
+ * host asks for its read scopes only.
  */
 
 import type { NodeKindDefinition } from "@particle-academy/fancy-flow/engine";
