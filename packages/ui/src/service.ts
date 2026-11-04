@@ -93,7 +93,7 @@ export const HUBSPOT_CREDENTIALS = [
     "label": "Access token",
     "scope": "account",
     "secret": true,
-    "help": "Obtained by the host's OAuth exchange, PER CONNECTED ACCOUNT. Expires after 30 minutes -- a host that does not refresh will work all afternoon and be broken by morning."
+    "help": "Obtained by the host's OAuth exchange, PER CONNECTED ACCOUNT. Expires after 30 minutes -- a host that does not refresh will work all afternoon and be broken by morning. This connector's scope list covers every action, read and write, and is not what your consent URL must ask for: HubSpot requires your app's required scopes in the authorize URL's `scope` parameter and shows an error otherwise, so build it from your own app's configuration. A read-only host asks for its read scopes only."
   },
   {
     "key": "refreshToken",

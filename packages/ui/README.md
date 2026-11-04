@@ -43,7 +43,7 @@ A HubSpot connection holds 4 values.
 |---|---|---|---|
 | **App client ID** | per installation | not secret | From your HubSpot app's Auth tab. ONE value for the whole installation -- the same app serves every connected account. |
 | **App client secret** | per installation | **secret** | From the same Auth tab. Used to exchange the code and to refresh; never sent with an API request. |
-| **Access token** | per connected account | **secret** | Obtained by the host's OAuth exchange, PER CONNECTED ACCOUNT. Expires after 30 minutes -- a host that does not refresh will work all afternoon and be broken by morning. |
+| **Access token** | per connected account | **secret** | Obtained by the host's OAuth exchange, PER CONNECTED ACCOUNT. Expires after 30 minutes -- a host that does not refresh will work all afternoon and be broken by morning. This connector's scope list covers every action, read and write, and is not what your consent URL must ask for: HubSpot requires your app's required scopes in the authorize URL's `scope` parameter and shows an error otherwise, so build it from your own app's configuration. A read-only host asks for its read scopes only. |
 | **Refresh token** *(optional)* | per connected account | **secret** | Also per account. Does not expire, so it is the credential worth protecting most: it mints access tokens indefinitely until the install is revoked. |
 
 ### Authorising
@@ -295,7 +295,7 @@ Delivered by webhook, and the signature is verified before anything runs.
 
 **You have to set this up with the provider first:**
 
-In the HubSpot app's webhook settings, set the target URL to the route your host mounts for this trigger and subscribe to the deal, contact and company events you want. Deliveries are signed with the app's client secret, already on the connection as `clientSecret`. ONE URL serves every portal that installed the app, so route each event by its portalId, and only after the signature has verified: map portalId to the connection created when that portal installed, and drop an unmapped portalId with a 2xx and a log line, creating nothing. HubSpot retries a failed delivery, and eventId is not guaranteed to be unique, so never dedupe on eventId alone: a retry is the same event resent, differing only in attemptNumber, so compare every other field.
+In the HubSpot app's webhook settings, set the target URL to the route your host mounts for this trigger and subscribe to the deal, contact and company events you want. Deliveries are signed with the app's client secret, already on the connection as `clientSecret`. ONE URL serves every portal that installed the app, so route each event by its portalId, and only after the signature has verified: map portalId to the connection created when that portal installed, and drop an unmapped portalId with a 2xx and a log line, creating nothing. HubSpot retries a failed delivery, and eventId is not guaranteed to be unique, so never dedupe on eventId alone: a retry is the same event resent, differing only in attemptNumber, so compare every other field. This connector's scope list covers every action, read and write, and is not what your consent URL must ask for: HubSpot requires your app's required scopes in the authorize URL's `scope` parameter and shows an error otherwise, so build it from your own app's configuration. A read-only host asks for its read scopes only.
 
 ## Run it before you have credentials
 
