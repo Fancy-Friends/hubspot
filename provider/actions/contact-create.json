@@ -26,7 +26,7 @@
       "key": "email",
       "label": "Email",
       "example": "{{ $json.email }}",
-      "description": "HubSpot de-duplicates contacts on email within an account. A contact created without one cannot be de-duplicated, and a retry will make a second.",
+      "description": "HubSpot de-duplicates contacts on email within an account. A contact created without one cannot be de-duplicated, and a retry will make a second. Required here OR as email in Properties.",
       "required": true,
       "send": { "as": "properties.email", "value": "string", "transform": "trim" }
     },
@@ -70,6 +70,14 @@
         { "value": "customer", "label": "Customer" }
       ],
       "send": { "as": "properties.lifecyclestage", "value": "string", "omitEmpty": true }
+    },
+    {
+      "type": "keyvalue",
+      "key": "properties",
+      "label": "Properties",
+      "description": "Any other HubSpot property name → value for the new contact (jobtitle, an address, a custom property), sent in the same call. Values are sent as strings, which is how HubSpot stores every property. The fields above merge into this map; email may be given here instead of in Email, and the same property given both ways with different values is refused rather than guessed.",
+      "send": { "in": "body", "as": "properties", "value": "keyvalue", "encoding": "object", "merge": true },
+      "$sendComment": "MOIC, 2026-11-05: company_create and deal_create take a properties map, and contact_create took only six named fields, so any other property needed a second call. A MERGE map, so the named fields keep working exactly as before."
     }
   ],
 

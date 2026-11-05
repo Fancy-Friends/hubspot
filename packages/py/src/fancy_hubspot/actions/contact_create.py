@@ -31,17 +31,71 @@ SIDE_EFFECTS = "unsafe-to-replay"
 
 def body(config: dict[str, Any]) -> dict[str, Any]:
     """Build the JSON body for one call, failing loudly and specifically."""
-    if config.get("email") is None or config.get("email") == "":
+    _given = config.get("email")
+    _in_map = _properties_map(config.get("properties")).get("email")
+    if (_given is None or _given == "") and _in_map is None:
         raise ConnectorConfigError(
-            "contact_create: \"email\" is required (Email)."
+            "contact_create: \"email\" is required — as Email, or as \"email\" in Properties."
+        )
+
+    _value = config.get("email")
+    _in_map = _properties_map(config.get("properties")).get("email")
+    _sent = str(_value).strip() if _value is not None and _value != "" else None
+    if _sent is not None and _in_map is not None and _in_map != _sent:
+        raise ConnectorConfigError(
+            "contact_create: \"email\" was given twice with different values — as Email and as "
+            "\"email\" in Properties."
+        )
+
+    _value = config.get("firstName")
+    _in_map = _properties_map(config.get("properties")).get("firstname")
+    _sent = str(_value) if _value is not None and _value != "" else None
+    if _sent is not None and _in_map is not None and _in_map != _sent:
+        raise ConnectorConfigError(
+            "contact_create: \"firstName\" was given twice with different values — as First name "
+            "and as \"firstname\" in Properties."
+        )
+
+    _value = config.get("lastName")
+    _in_map = _properties_map(config.get("properties")).get("lastname")
+    _sent = str(_value) if _value is not None and _value != "" else None
+    if _sent is not None and _in_map is not None and _in_map != _sent:
+        raise ConnectorConfigError(
+            "contact_create: \"lastName\" was given twice with different values — as Last name and "
+            "as \"lastname\" in Properties."
+        )
+
+    _value = config.get("company")
+    _in_map = _properties_map(config.get("properties")).get("company")
+    _sent = str(_value) if _value is not None and _value != "" else None
+    if _sent is not None and _in_map is not None and _in_map != _sent:
+        raise ConnectorConfigError(
+            "contact_create: \"company\" was given twice with different values — as Company and as "
+            "\"company\" in Properties."
+        )
+
+    _value = config.get("phone")
+    _in_map = _properties_map(config.get("properties")).get("phone")
+    _sent = str(_value) if _value is not None and _value != "" else None
+    if _sent is not None and _in_map is not None and _in_map != _sent:
+        raise ConnectorConfigError(
+            "contact_create: \"phone\" was given twice with different values — as Phone and as "
+            "\"phone\" in Properties."
+        )
+
+    _value = config.get("lifecycleStage")
+    _in_map = _properties_map(config.get("properties")).get("lifecyclestage")
+    _sent = str(_value) if _value is not None and _value != "" else None
+    if _sent is not None and _in_map is not None and _in_map != _sent:
+        raise ConnectorConfigError(
+            "contact_create: \"lifecycleStage\" was given twice with different values — as "
+            "Lifecycle stage and as \"lifecyclestage\" in Properties."
         )
 
     out: dict[str, Any] = {}
     _value = config.get("email")
-    if _value is None or _value == "":
-        raise ConnectorConfigError("contact_create: \"email\" is required.")
-
-    out["properties.email"] = str(_value).strip()
+    if _value is not None and _value != "":
+        out["properties.email"] = str(_value).strip()
     _value = config.get("firstName")
     if _value is not None and _value != "":
         out["properties.firstname"] = str(_value)
@@ -59,7 +113,13 @@ def body(config: dict[str, Any]) -> dict[str, Any]:
         out["properties.lifecyclestage"] = str(_value)
 
     out["associations"] = []
-    return _nest_fields(out)
+    out = _nest_fields(out)
+    _named = out.get("properties")
+    out["properties"] = {
+        **_properties_map(config.get("properties")),
+        **(_named if isinstance(_named, dict) else {}),
+    }
+    return out
 
 
 def contact_create(
@@ -133,3 +193,10 @@ def _listify(node: Any) -> Any:
         return [walked[key] for key in wanted]
 
     return walked
+
+def _properties_map(value: Any) -> dict[str, str]:
+    """A JSON body wants the real nested object, not a JSON string."""
+    if not isinstance(value, dict):
+        return {}
+
+    return {str(k): str(v) for k, v in value.items() if v is not None and v != ""}

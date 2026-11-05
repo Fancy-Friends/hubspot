@@ -7,10 +7,31 @@ The four packages share one version, because they are generated from one
 `provider/` definition and a version that meant something different in each
 would be a version nobody could reason about.
 
-## [Unreleased]
+## [0.6.0] — 2026-11-05
+
+### Added
+
+- **`contact_create` takes a `properties` map, as `company_create` and
+  `deal_create` do**, so a contact is created with ANY property (`jobtitle`,
+  an address, a custom property) in one call. Additive: the named fields
+  (Email, First name, Last name, Company, Phone, Lifecycle stage) work
+  exactly as before and merge into the map. `email` is still required, and
+  may be given in Email OR as `email` in Properties; missing from both, the
+  refusal names both places. The same property given both ways with
+  DIFFERENT values is refused by name rather than guessed. The editor no
+  longer marks Email required, because the map can satisfy it. Found by MOIC
+  (their #905): `properties` given the company_create way was refused as a
+  missing email.
 
 ### Fixed
 
+- **PHP: a `properties` map passed as an OBJECT is read, not dropped.** The
+  generated PHP read a map that arrived as a decoded JSON OBJECT (`stdClass`,
+  e.g. an upstream node's value or `json_decode(..., false)`) as "not an
+  array" and sent it EMPTY, without an error: silent data loss. It now reads
+  the object's properties. **Affected:** PHP callers passing the map as an
+  object. **Not affected:** callers passing an array, which always worked;
+  they need do nothing. TypeScript and Python were never affected.
 - **`crm_event` no longer tells a host to dedupe on `eventId`.** HubSpot's
   field table says `eventId` "is not guaranteed to be unique", so deduping on
   it can drop a DIFFERENT event that shares one, such as two properties of one

@@ -230,7 +230,10 @@ test("contact_create sends POST /crm/v3/objects/contacts", async () => {
       "lastName": "example-lastName",
       "company": "example-company",
       "phone": "example-phone",
-      "lifecycleStage": "subscriber"
+      "lifecycleStage": "subscriber",
+      "properties": {
+        "order_id": "7"
+      }
     },
     credentials: CREDENTIALS,
     mode: "live",
@@ -243,6 +246,7 @@ test("contact_create sends POST /crm/v3/objects/contacts", async () => {
 
   assert.deepEqual(JSON.parse(String(seen[0]!.body ?? "{}")), {
     "properties": {
+      "order_id": "7",
       "email": "Example-email",
       "firstname": "example-firstName",
       "lastname": "example-lastName",

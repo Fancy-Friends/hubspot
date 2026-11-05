@@ -83,6 +83,9 @@ final class CompanyUpdate
     /** A JSON body wants the real nested object, not a JSON string. @return array<string,string> */
     private static function propertiesMap(mixed $value): array
     {
+        if (is_object($value)) {
+            $value = get_object_vars($value);
+        }
         if (! is_array($value)) {
             return [];
         }
