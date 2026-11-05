@@ -49,14 +49,52 @@ final class ContactCreate
      */
     public static function body(array $config): array|\stdClass
     {
-        if (($config['email'] ?? null) === null || ($config['email'] ?? null) === '') {
-            throw new ConnectorConfigException('contact_create: "email" is required (Email).');
+        if ((($config['email'] ?? null) === null || ($config['email'] ?? null) === '') && ! array_key_exists('email', self::propertiesMap($config['properties'] ?? null))) {
+            throw new ConnectorConfigException('contact_create: "email" is required — as Email, or as "email" in Properties.');
+        }
+
+        $value = $config['email'] ?? null;
+        $inMap = self::propertiesMap($config['properties'] ?? null)['email'] ?? null;
+        if ($value !== null && $value !== '' && $inMap !== null && $inMap !== trim((string) $value)) {
+            throw new ConnectorConfigException('contact_create: "email" was given twice with different values — as Email and as "email" in Properties.');
+        }
+
+        $value = $config['firstName'] ?? null;
+        $inMap = self::propertiesMap($config['properties'] ?? null)['firstname'] ?? null;
+        if ($value !== null && $value !== '' && $inMap !== null && $inMap !== (string) $value) {
+            throw new ConnectorConfigException('contact_create: "firstName" was given twice with different values — as First name and as "firstname" in Properties.');
+        }
+
+        $value = $config['lastName'] ?? null;
+        $inMap = self::propertiesMap($config['properties'] ?? null)['lastname'] ?? null;
+        if ($value !== null && $value !== '' && $inMap !== null && $inMap !== (string) $value) {
+            throw new ConnectorConfigException('contact_create: "lastName" was given twice with different values — as Last name and as "lastname" in Properties.');
+        }
+
+        $value = $config['company'] ?? null;
+        $inMap = self::propertiesMap($config['properties'] ?? null)['company'] ?? null;
+        if ($value !== null && $value !== '' && $inMap !== null && $inMap !== (string) $value) {
+            throw new ConnectorConfigException('contact_create: "company" was given twice with different values — as Company and as "company" in Properties.');
+        }
+
+        $value = $config['phone'] ?? null;
+        $inMap = self::propertiesMap($config['properties'] ?? null)['phone'] ?? null;
+        if ($value !== null && $value !== '' && $inMap !== null && $inMap !== (string) $value) {
+            throw new ConnectorConfigException('contact_create: "phone" was given twice with different values — as Phone and as "phone" in Properties.');
+        }
+
+        $value = $config['lifecycleStage'] ?? null;
+        $inMap = self::propertiesMap($config['properties'] ?? null)['lifecyclestage'] ?? null;
+        if ($value !== null && $value !== '' && $inMap !== null && $inMap !== (string) $value) {
+            throw new ConnectorConfigException('contact_create: "lifecycleStage" was given twice with different values — as Lifecycle stage and as "lifecyclestage" in Properties.');
         }
 
         $body = [];
 
         $value = $config['email'] ?? null;
-        $body['properties.email'] = trim((string) $value);
+        if ($value !== null && $value !== '') {
+            $body['properties.email'] = trim((string) $value);
+        }
 
         $value = $config['firstName'] ?? null;
         if ($value !== null && $value !== '') {
@@ -86,6 +124,8 @@ final class ContactCreate
         $body['associations'] = [];
 
         $body = self::nestFields($body);
+        $merged = array_replace(self::propertiesMap($config['properties'] ?? null), is_array($body['properties'] ?? null) ? $body['properties'] : []);
+        $body['properties'] = $merged === [] ? new \stdClass() : $merged;
         $body = $body === [] ? new \stdClass() : $body;
         return $body;
     }
@@ -119,6 +159,27 @@ final class ContactCreate
 
             $node[$parts[0]] = $value;
             unset($node);
+        }
+
+        return $out;
+    }
+
+    /** A JSON body wants the real nested object, not a JSON string. @return array<string,string> */
+    private static function propertiesMap(mixed $value): array
+    {
+        if (is_object($value)) {
+            $value = get_object_vars($value);
+        }
+        if (! is_array($value)) {
+            return [];
+        }
+
+        $out = [];
+
+        foreach ($value as $key => $item) {
+            if ($item !== null && $item !== '') {
+                $out[(string) $key] = (string) $item;
+            }
         }
 
         return $out;

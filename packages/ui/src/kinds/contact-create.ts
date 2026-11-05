@@ -88,8 +88,7 @@ export const hubspotContactCreateKind: NodeKindDefinition = defineConnectorKind(
       "key": "email",
       "label": "Email",
       "example": "{{ $json.email }}",
-      "description": "HubSpot de-duplicates contacts on email within an account. A contact created without one cannot be de-duplicated, and a retry will make a second.",
-      "required": true
+      "description": "HubSpot de-duplicates contacts on email within an account. A contact created without one cannot be de-duplicated, and a retry will make a second. Required here OR as email in Properties."
     },
     {
       "type": "expression",
@@ -141,6 +140,12 @@ export const hubspotContactCreateKind: NodeKindDefinition = defineConnectorKind(
           "label": "Customer"
         }
       ]
+    },
+    {
+      "type": "keyvalue",
+      "key": "properties",
+      "label": "Properties",
+      "description": "Any other HubSpot property name → value for the new contact (jobtitle, an address, a custom property), sent in the same call. Values are sent as strings, which is how HubSpot stores every property. The fields above merge into this map; email may be given here instead of in Email, and the same property given both ways with different values is refused rather than guessed."
     }
   ],
   defaultConfig: {

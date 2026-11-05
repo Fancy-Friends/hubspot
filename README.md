@@ -136,12 +136,13 @@ Create a contact in HubSpot.
 
 | Input | Required | What it is |
 |---|---|---|
-| `email` | yes | HubSpot de-duplicates contacts on email within an account. A contact created without one cannot be de-duplicated, and a retry will make a second. |
+| `email` | yes | HubSpot de-duplicates contacts on email within an account. A contact created without one cannot be de-duplicated, and a retry will make a second. Required here OR as email in Properties. |
 | `firstName` | no | First name |
 | `lastName` | no | Last name |
 | `company` | no | Company |
 | `phone` | no | Phone |
 | `lifecycleStage` | no | HubSpot's own stage names. A value it does not recognise is refused at write time, not at setup. |
+| `properties` | no | Any other HubSpot property name → value for the new contact (jobtitle, an address, a custom property), sent in the same call. Values are sent as strings, which is how HubSpot stores every property. The fields above merge into this map; email may be given here instead of in Email, and the same property given both ways with different values is refused rather than guessed. |
 
 #### `contact_get` — Get contact
 
