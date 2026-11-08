@@ -39,7 +39,7 @@ from .faker import respond
 from .service import BASE_URLS, CONNECTOR_API_VERSION, REQUIRES, SANDBOX, SERVICE, TITLE, descriptor
 from .triggers import crm_event
 
-__version__ = "0.7.0"
+__version__ = "0.7.1"
 
 __all__ = [
     "BASE_URLS",
