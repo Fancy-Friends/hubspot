@@ -20,12 +20,12 @@ return [
 
     'credentials' => [
         // App client ID (one per installation).
-        'clientId' => env('HUBSPOT_CLIENTID'),
+        'clientId' => env('HUBSPOT_CLIENT_ID', env('HUBSPOT_CLIENTID')),
         // App client secret (one per installation, secret).
-        'clientSecret' => env('HUBSPOT_CLIENTSECRET'),
+        'clientSecret' => env('HUBSPOT_CLIENT_SECRET', env('HUBSPOT_CLIENTSECRET')),
         // Access token (per connected account, secret).
-        'accessToken' => env('HUBSPOT_ACCESSTOKEN'),
+        'accessToken' => env('HUBSPOT_ACCESS_TOKEN', env('HUBSPOT_ACCESSTOKEN')),
         // Refresh token (per connected account, secret).
-        'refreshToken' => env('HUBSPOT_REFRESHTOKEN'),
+        'refreshToken' => env('HUBSPOT_REFRESH_TOKEN', env('HUBSPOT_REFRESHTOKEN')),
     ],
 ];
