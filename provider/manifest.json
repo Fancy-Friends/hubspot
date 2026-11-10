@@ -7,6 +7,7 @@
   "title": "HubSpot",
   "domain": "crm",
   "docs": "https://developers.hubspot.com/docs/reference/api/crm/objects/contacts",
+  "summary": "Read and write HubSpot CRM deals, contacts and companies from a workflow or a Laravel app, and react to CRM changes through verified webhooks routed by portal.",
 
   "auth": "oauth2",
   "requires": ["accessToken"],
@@ -47,6 +48,36 @@
   "sandboxNote": "HubSpot's test estate is a DEVELOPER TEST ACCOUNT: a separate portal you create from the developer account, with its own portal id, its own data and its own OAuth install. Same API host, different account -- so the credential is different and the URL is not. Test accounts expire if unused and carry reduced limits, which is why they are a place to test rather than a place to build against.",
 
   "encoding": "json",
+
+  "$setupComment": "Steps read from developers.hubspot.com on 2026-11-10 (each cites its page), for HubSpot's developer platform (projects and the hs CLI). Not stated by the webhook page, so carried from this connector's verified trigger instead: deliveries are signed (v3) with the app's client secret.",
+  "setup": [
+    {
+      "title": "Create the app as a HubSpot project",
+      "detail": "Run hs project create and choose App, with OAuth (static auth limits installation to one account, and this connector serves many). In app-hsmeta.json, under config.auth, put {{oauthRedirectUrl}} in redirectUrls, and list in requiredScopes the scopes your app actually uses: HubSpot shows an error unless the authorize URL asks for the app's required scopes, so a read-only app lists only its .read scopes.",
+      "url": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/create-an-app",
+      "copy": [{ "label": "Redirect URL", "value": "{{oauthRedirectUrl}}" }]
+    },
+    {
+      "title": "Subscribe the app to CRM events",
+      "detail": "Add src/app/webhooks/webhook-hsmeta.json (uid and type \"webhooks\"). Set targetUrl to {{webhookUrl}}, the public URL HubSpot delivers to, and under subscriptions.crmObjects add the object.* events you need for deal, company and contact (object.creation, object.propertyChange, object.deletion).",
+      "url": "https://developers.hubspot.com/docs/apps/developer-platform/add-features/configure-webhooks",
+      "copy": [{ "label": "Target URL", "value": "{{webhookUrl}}" }]
+    },
+    {
+      "title": "Upload the project and copy the client credentials",
+      "detail": "Run hs project upload (it builds the app), then hs project open; under Project Components click the app, open the Auth tab, and copy the Client ID and Client secret under Client credentials. The client secret also signs every webhook delivery, so the same value verifies them.",
+      "url": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/create-an-app",
+      "fields": ["clientId", "clientSecret"]
+    },
+    {
+      "title": "Connect an account and check reads and webhooks",
+      "detail": "Install the app into a HubSpot account through {{appName}}'s OAuth flow, run a read, then change a record and check the webhook arrives.",
+      "url": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/create-an-app",
+      "actor": "agent",
+      "prompt": "Using {{appName}}'s {{connector}} connection for a newly installed HubSpot account, run deal_list with a limit of 1 and report what it returns. Then ask the person to edit a deal in that account, and confirm {{appName}} received a crm_event whose v3 signature verified and whose portalId routed to that connection.",
+      "done": "deal_list answers for the connected account, and an edited deal arrives as a verified crm_event routed to the right portal."
+    }
+  ],
 
   "credentialFields": [
     {

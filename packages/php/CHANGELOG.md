@@ -7,6 +7,24 @@ The four packages share one version, because they are generated from one
 `provider/` definition and a version that meant something different in each
 would be a version nobody could reason about.
 
+## [0.7.2] — 2026-11-10
+
+### Added
+
+- **Complete setup steps**, in SETUP.md and the registry index, for HubSpot's
+  developer platform:
+  - `hs project create` with OAuth, `{{oauthRedirectUrl}}` in `redirectUrls`,
+    and only the scopes your app uses in `requiredScopes`;
+  - the webhooks component with `targetUrl` at `{{webhookUrl}}` and the
+    `object.*` subscriptions;
+  - `hs project upload` and the Client ID and secret from the Auth tab (the
+    secret also signs webhooks);
+  - an AGENT step that reads with `deal_list` and checks a verified,
+    portal-routed `crm_event`.
+
+  Each step cites the HubSpot page it was checked against on 2026-11-10.
+- A one-line `summary`.
+
 ## [0.7.1] — 2026-11-08
 
 ### Fixed
