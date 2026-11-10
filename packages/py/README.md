@@ -33,6 +33,15 @@ dependencies nobody is tracking.
 
 Everything below is generated from `provider/manifest.json`, so it cannot disagree with what the packages do.
 
+### On HubSpot's side
+
+1. **Create the app as a HubSpot project** — Run hs project create and choose App, with OAuth (static auth limits installation to one account, and this connector serves many). In app-hsmeta.json, under config.auth, put **your host's OAuth redirect URL** in redirectUrls, and list in requiredScopes the scopes your app actually uses: HubSpot shows an error unless the authorize URL asks for the app's required scopes, so a read-only app lists only its .read scopes. ([developers.hubspot.com](https://developers.hubspot.com/docs/apps/developer-platform/build-apps/create-an-app))
+2. **Subscribe the app to CRM events** — Add src/app/webhooks/webhook-hsmeta.json (uid and type "webhooks"). Set targetUrl to **your host's webhook URL for this connector**, the public URL HubSpot delivers to, and under subscriptions.crmObjects add the object.* events you need for deal, company and contact (object.creation, object.propertyChange, object.deletion). ([developers.hubspot.com](https://developers.hubspot.com/docs/apps/developer-platform/add-features/configure-webhooks))
+3. **Upload the project and copy the client credentials** — Run hs project upload (it builds the app), then hs project open; under Project Components click the app, open the Auth tab, and copy the Client ID and Client secret under Client credentials. The client secret also signs every webhook delivery, so the same value verifies them. ([developers.hubspot.com](https://developers.hubspot.com/docs/apps/developer-platform/build-apps/create-an-app))
+4. **Connect an account and check reads and webhooks** — Install the app into a HubSpot account through **your app's name**'s OAuth flow, run a read, then change a record and check the webhook arrives. ([developers.hubspot.com](https://developers.hubspot.com/docs/apps/developer-platform/build-apps/create-an-app))
+
+Every step in full — who does it, what to paste, which credentials it yields, and how you know it worked — is in [SETUP.md](SETUP.md).
+
 ### Credentials
 
 A HubSpot connection holds 4 values.
