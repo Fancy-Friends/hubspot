@@ -60,7 +60,7 @@ A HubSpot connection holds 4 values.
 HubSpot uses OAuth2 (authorization_code). The package DECLARES the exchange; the HOST performs it — a consent screen needs a browser, a redirect URI and somewhere to persist the result, and all three belong to the host.
 
 - **Authorize URL** — https://app.hubspot.com/oauth/authorize
-- **Token URL** — https://api.hubapi.com/oauth/v1/token
+- **Token URL** — https://api.hubapi.com/oauth/2026-03/token
 - **Scopes** — `crm.objects.contacts.read`, `crm.objects.contacts.write`, `crm.objects.companies.read`, `crm.objects.companies.write`, `crm.objects.deals.read`, `crm.objects.deals.write`, `crm.objects.owners.read`, `crm.schemas.contacts.read`, `crm.schemas.companies.read`, `crm.schemas.deals.read`
 - **Access token lifetime** — 1800 seconds (30 minutes). A host that never refreshes works all afternoon and is broken by morning.
 

@@ -22,7 +22,12 @@
   "oauth": {
     "flow": "authorization_code",
     "authorizeUrl": "https://app.hubspot.com/oauth/authorize",
-    "tokenUrl": "https://api.hubapi.com/oauth/v1/token",
+    "tokenUrl": "https://api.hubapi.com/oauth/2026-03/token",
+    "$tokenUrlComment": "HubSpot's DATE-BASED versioned OAuth API, 2026-03 (owner's choice, q_ae4b5fa2, 2026-11-18). The OAuth v1 endpoints are deprecated on 2027-02-16 (HubSpot's migration guide). One URL serves both the code exchange and refresh; every parameter goes in a form-encoded BODY (HubSpot refuses sensitive data in the URL), and the token response is identical to v1's. The install URL and scopes are unchanged.",
+    "introspect": { "url": "https://api.hubapi.com/oauth/2026-03/token/introspect" },
+    "$introspectComment": "Replaces both v1 GETs (/oauth/v1/access-tokens/{token}, /oauth/v1/refresh-tokens/{token}). POST, form-encoded: client_id, client_secret, token, token_type_hint ('access_token' | 'refresh_token'). The response's tokenType is now 'Bearer', with token_use and active.",
+    "revoke": { "url": "https://api.hubapi.com/oauth/2026-03/token/revoke", "param": "token", "scope": "token" },
+    "$revokeComment": "Replaces DELETE /oauth/v1/refresh-tokens/{token}: POST with the refresh token in a form-encoded body, used on uninstall or disconnect. HubSpot's 2026-09 revoke reference lists client_id, client_secret, token and token_type_hint; the 2026-03 page names only 'the refresh token in a URL-encoded request body', so the companion fields are INFERRED from 2026-09, not confirmed for 2026-03. scope 'token': HubSpot does not say revocation reaches beyond the refresh token.",
     "scopes": [
       "crm.objects.contacts.read", "crm.objects.contacts.write",
       "crm.objects.companies.read", "crm.objects.companies.write",
