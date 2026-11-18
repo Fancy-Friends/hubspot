@@ -7,6 +7,30 @@ The four packages share one version, because they are generated from one
 `provider/` definition and a version that meant something different in each
 would be a version nobody could reason about.
 
+## [0.7.3] — 2026-11-18
+
+### Fixed
+
+- **OAuth moves off HubSpot's deprecated v1 endpoints to the date-based
+  `2026-03` version.** HubSpot deprecates `/oauth/v1/*` on **2027-02-16**.
+  - **Token exchange and refresh:** `oauth.tokenUrl` is now
+    `https://api.hubapi.com/oauth/2026-03/token`.
+  - **Introspect (new):** `oauth.introspect` is
+    `https://api.hubapi.com/oauth/2026-03/token/introspect`, a POST that replaces
+    both v1 token-info GETs.
+  - **Revoke (new):** `oauth.revoke` is
+    `https://api.hubapi.com/oauth/2026-03/token/revoke`, a POST that replaces the
+    v1 DELETE.
+  - **How to call it:** every parameter goes in a form-encoded BODY (HubSpot
+    refuses sensitive data in the URL). The token response is identical to v1's,
+    and the install URL and scopes are unchanged.
+  - **Host action:** a host that hard-codes `/oauth/v1/token` must switch. Read
+    `HUBSPOT_OAUTH.tokenUrl` (or the index's `auth.tokenUrl`) and it follows.
+    hubspot 0.8.0 will ship the exchange, refresh, introspect and revoke calls
+    themselves.
+  - **Guard:** a test now refuses any OAuth endpoint a provider has announced
+    as deprecated.
+
 ## [0.7.2] — 2026-11-10
 
 ### Added

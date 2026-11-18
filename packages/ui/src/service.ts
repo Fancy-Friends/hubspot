@@ -125,7 +125,15 @@ export const HUBSPOT_CREDENTIALS = [
 export const HUBSPOT_OAUTH = {
   "flow": "authorization_code",
   "authorizeUrl": "https://app.hubspot.com/oauth/authorize",
-  "tokenUrl": "https://api.hubapi.com/oauth/v1/token",
+  "tokenUrl": "https://api.hubapi.com/oauth/2026-03/token",
+  "introspect": {
+    "url": "https://api.hubapi.com/oauth/2026-03/token/introspect"
+  },
+  "revoke": {
+    "url": "https://api.hubapi.com/oauth/2026-03/token/revoke",
+    "param": "token",
+    "scope": "token"
+  },
   "scopes": [
     "crm.objects.contacts.read",
     "crm.objects.contacts.write",
