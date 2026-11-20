@@ -265,6 +265,47 @@ Change properties on an existing deal.
 | `dealId` | yes | The deal's HubSpot id (a numeric string). |
 | `properties` | yes | HubSpot property name → value for the deal. Values are sent as strings, which is how HubSpot stores every property. |
 
+#### `oauth_exchange_code` — Exchange OAuth code
+
+Exchange the authorization code HubSpot sent to your redirect URL for an access token and a refresh token.
+
+`POST /oauth/2026-03/token` · **unsafe to replay** — a retried durable run does it TWICE
+
+| Input | Required | What it is |
+|---|---|---|
+| `code` | yes | The `code` query parameter HubSpot added to your redirect URL. Single-use, and short-lived. |
+| `redirectUri` | yes | The redirect URL the install was started with, exactly as sent: HubSpot refuses the exchange if it differs. |
+
+#### `oauth_introspect` — Introspect OAuth token
+
+Ask HubSpot whether a token is still active, and what it is for. Replaces both v1 token-info calls.
+
+`POST /oauth/2026-03/token/introspect` · reads only — safe to replay
+
+| Input | Required | What it is |
+|---|---|---|
+| `token` | yes | The access token or refresh token to check. |
+| `tokenTypeHint` | no | Which kind of token `token` is. Optional; HubSpot works it out when omitted. |
+
+#### `oauth_refresh` — Refresh OAuth token
+
+Use the connection's refresh token to get a new access token. HubSpot access tokens last 30 minutes.
+
+`POST /oauth/2026-03/token` · idempotent — safe to replay
+
+Takes no input.
+
+#### `oauth_revoke` — Revoke OAuth token
+
+Revoke a refresh token, on uninstall or disconnect. Replaces the v1 DELETE.
+
+`POST /oauth/2026-03/token/revoke` · idempotent — safe to replay
+
+| Input | Required | What it is |
+|---|---|---|
+| `token` | yes | The refresh token to revoke. |
+| `tokenTypeHint` | no | Which kind of token `token` is. Optional. |
+
 #### `owner_list` — List owners
 
 Page through the portal's owners: the users records can be assigned to.

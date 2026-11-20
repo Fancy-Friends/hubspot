@@ -1,0 +1,45 @@
+{
+  "operation": "oauth_revoke",
+  "kind": "oauth_revoke",
+  "title": "Revoke OAuth token",
+  "description": "Revoke a refresh token, on uninstall or disconnect. Replaces the v1 DELETE.",
+  "summary": "revoke a refresh token",
+  "docs": "https://developers.hubspot.com/docs/api-reference/legacy/authentication/oauth-tokens/v1/migration-guide",
+  "sideEffects": "idempotent",
+  "$sideEffectsComment": "Revoking a token that is already revoked changes nothing.",
+  "auth": {
+    "kind": "form",
+    "requires": ["clientId", "clientSecret"],
+    "fields": [
+      { "credential": "clientId", "as": "client_id" },
+      { "credential": "clientSecret", "as": "client_secret" }
+    ],
+    "$comment": "HubSpot's 2026-03 page names only 'the refresh token in a URL-encoded request body'. The client credentials are taken from its 2026-09 reference: INFERRED for 2026-03, not confirmed. The first live revoke settles it."
+  },
+  "request": {
+    "method": "POST",
+    "path": "/oauth/2026-03/token/revoke",
+    "encoding": "form"
+  },
+  "config": [
+    { "type": "text", "key": "token", "label": "Token", "required": true, "description": "The refresh token to revoke.", "send": { "in": "body", "as": "token", "value": "string" } },
+    {
+      "type": "select",
+      "key": "tokenTypeHint",
+      "label": "Token type",
+      "description": "Which kind of token `token` is. Optional.",
+      "options": [
+        { "value": "refresh_token", "label": "Refresh token" },
+        { "value": "access_token", "label": "Access token" }
+      ],
+      "send": { "in": "body", "as": "token_type_hint", "value": "string" }
+    }
+  ],
+  "outputShape": [
+    { "path": "data", "type": "object", "description": "HubSpot's answer, as it arrived; null when it answers with an empty body." }
+  ],
+  "contract": {
+    "sends": ["client_id", "client_secret", "token", "token_type_hint"],
+    "reads": []
+  }
+}

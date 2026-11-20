@@ -73,6 +73,92 @@ final class Hubspot
     }
 
     /**
+     * The descriptor ONE operation is called with.
+     *
+     * oauth_exchange_code, oauth_introspect, oauth_refresh, oauth_revoke do not present the service's
+     * authorize: they send the app's client credentials in the form body, and
+     * require those instead of an access token. Every other operation gets
+     * descriptor() unchanged.
+     */
+    public static function descriptorFor(string $operation): ServiceDescriptor
+    {
+        $service = self::descriptor();
+
+        return match ($operation) {
+            'oauth_exchange_code' => new ServiceDescriptor(
+                service: $service->service,
+                title: $service->title,
+                sandbox: $service->sandbox,
+                baseUrls: $service->baseUrls,
+                requires: ['clientId', 'clientSecret'],
+                authorize: static function (array $credentials, PreparedRequest $request, Mode $mode): void {
+                    $pairs = implode('&', [
+                        'client_id='.rawurlencode((string) ($credentials['clientId'] ?? '')),
+                        'client_secret='.rawurlencode((string) ($credentials['clientSecret'] ?? '')),
+                    ]);
+                    $request->body = ($request->body ?? '') === '' ? $pairs : $request->body.'&'.$pairs;
+                },
+                faker: $service->faker,
+                idempotencyHeader: $service->idempotencyHeader,
+                providerCodeFrom: $service->providerCodeFrom,
+            ),
+            'oauth_introspect' => new ServiceDescriptor(
+                service: $service->service,
+                title: $service->title,
+                sandbox: $service->sandbox,
+                baseUrls: $service->baseUrls,
+                requires: ['clientId', 'clientSecret'],
+                authorize: static function (array $credentials, PreparedRequest $request, Mode $mode): void {
+                    $pairs = implode('&', [
+                        'client_id='.rawurlencode((string) ($credentials['clientId'] ?? '')),
+                        'client_secret='.rawurlencode((string) ($credentials['clientSecret'] ?? '')),
+                    ]);
+                    $request->body = ($request->body ?? '') === '' ? $pairs : $request->body.'&'.$pairs;
+                },
+                faker: $service->faker,
+                idempotencyHeader: $service->idempotencyHeader,
+                providerCodeFrom: $service->providerCodeFrom,
+            ),
+            'oauth_refresh' => new ServiceDescriptor(
+                service: $service->service,
+                title: $service->title,
+                sandbox: $service->sandbox,
+                baseUrls: $service->baseUrls,
+                requires: ['clientId', 'clientSecret', 'refreshToken'],
+                authorize: static function (array $credentials, PreparedRequest $request, Mode $mode): void {
+                    $pairs = implode('&', [
+                        'client_id='.rawurlencode((string) ($credentials['clientId'] ?? '')),
+                        'client_secret='.rawurlencode((string) ($credentials['clientSecret'] ?? '')),
+                        'refresh_token='.rawurlencode((string) ($credentials['refreshToken'] ?? '')),
+                    ]);
+                    $request->body = ($request->body ?? '') === '' ? $pairs : $request->body.'&'.$pairs;
+                },
+                faker: $service->faker,
+                idempotencyHeader: $service->idempotencyHeader,
+                providerCodeFrom: $service->providerCodeFrom,
+            ),
+            'oauth_revoke' => new ServiceDescriptor(
+                service: $service->service,
+                title: $service->title,
+                sandbox: $service->sandbox,
+                baseUrls: $service->baseUrls,
+                requires: ['clientId', 'clientSecret'],
+                authorize: static function (array $credentials, PreparedRequest $request, Mode $mode): void {
+                    $pairs = implode('&', [
+                        'client_id='.rawurlencode((string) ($credentials['clientId'] ?? '')),
+                        'client_secret='.rawurlencode((string) ($credentials['clientSecret'] ?? '')),
+                    ]);
+                    $request->body = ($request->body ?? '') === '' ? $pairs : $request->body.'&'.$pairs;
+                },
+                faker: $service->faker,
+                idempotencyHeader: $service->idempotencyHeader,
+                providerCodeFrom: $service->providerCodeFrom,
+            ),
+            default => $service,
+        };
+    }
+
+    /**
      * Apply HubSpot's auth scheme to an outgoing request.
      *
      * An OAuth2 access token is presented exactly like a static bearer token. The

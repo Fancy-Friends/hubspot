@@ -50,6 +50,10 @@ final class HubspotFaker
             'deal_list' => self::DealList($config, $fake),
             'deal_search' => self::DealSearch($config, $fake),
             'deal_update' => self::DealUpdate($config, $fake),
+            'oauth_exchange_code' => self::OauthExchangeCode($config, $fake),
+            'oauth_introspect' => self::OauthIntrospect($config, $fake),
+            'oauth_refresh' => self::OauthRefresh($config, $fake),
+            'oauth_revoke' => self::OauthRevoke($config, $fake),
             'owner_list' => self::OwnerList($config, $fake),
             'pipeline_list' => self::PipelineList($config, $fake),
             'property_list' => self::PropertyList($config, $fake),
@@ -444,6 +448,45 @@ final class HubspotFaker
         'updatedAt' => '2026-01-01T00:00:00.000Z',
         'archived' => false,
     ];
+    }
+
+    /** @param array<string,mixed> $config */
+    private static function OauthExchangeCode(array $config, mixed $fake): array|\stdClass
+    {
+        return [
+        'access_token' => $fake->hex(40),
+        'refresh_token' => $fake->hex(8).'-'.$fake->hex(4).'-'.$fake->hex(4).'-'.$fake->hex(4).'-'.$fake->hex(12),
+        'expires_in' => 1800,
+        'token_type' => 'bearer',
+    ];
+    }
+
+    /** @param array<string,mixed> $config */
+    private static function OauthIntrospect(array $config, mixed $fake): array|\stdClass
+    {
+        return [
+        'active' => true,
+        'token_type' => 'Bearer',
+        'token_use' => 'access_token',
+        'expires_in' => 1800,
+    ];
+    }
+
+    /** @param array<string,mixed> $config */
+    private static function OauthRefresh(array $config, mixed $fake): array|\stdClass
+    {
+        return [
+        'access_token' => $fake->hex(40),
+        'refresh_token' => $fake->hex(8).'-'.$fake->hex(4).'-'.$fake->hex(4).'-'.$fake->hex(4).'-'.$fake->hex(12),
+        'expires_in' => 1800,
+        'token_type' => 'bearer',
+    ];
+    }
+
+    /** @param array<string,mixed> $config */
+    private static function OauthRevoke(array $config, mixed $fake): array|\stdClass
+    {
+        return new \stdClass();
     }
 
     /** @param array<string,mixed> $config */

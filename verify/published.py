@@ -352,6 +352,41 @@ GOLDENS = [
         },
     },
     {
+        "operation": "oauth_exchange_code",
+        "config": {},
+        "expected": {
+            "access_token": "6f1dad038d09abfdb6bcaf0648d3aba889701a1b",
+            "refresh_token": "cc54df42-a02a-7df3-4532-fe145421e699",
+            "expires_in": 1800,
+            "token_type": "bearer",
+        },
+    },
+    {
+        "operation": "oauth_introspect",
+        "config": {},
+        "expected": {
+            "active": True,
+            "token_type": "Bearer",
+            "token_use": "access_token",
+            "expires_in": 1800,
+        },
+    },
+    {
+        "operation": "oauth_refresh",
+        "config": {},
+        "expected": {
+            "access_token": "3d68967adb5ff4899c160baef11f46ff21d5e9ff",
+            "refresh_token": "01a2b6ca-b800-782b-7345-8eed4fdfc5c1",
+            "expires_in": 1800,
+            "token_type": "bearer",
+        },
+    },
+    {
+        "operation": "oauth_revoke",
+        "config": {},
+        "expected": {},
+    },
+    {
         "operation": "owner_list",
         "config": {},
         "expected": {

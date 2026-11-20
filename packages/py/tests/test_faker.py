@@ -417,6 +417,57 @@ def test_deal_update_fakes_the_published_shape() -> None:
     }
 
 
+def test_oauth_exchange_code_fakes_the_published_shape() -> None:
+    config = {}
+    fake = FakeValues(seed_for_call("hubspot", "oauth_exchange_code", config))
+
+    faked = respond("oauth_exchange_code", {"config": config, "fake": fake})
+
+    assert faked == {
+        "access_token": "6f1dad038d09abfdb6bcaf0648d3aba889701a1b",
+        "refresh_token": "cc54df42-a02a-7df3-4532-fe145421e699",
+        "expires_in": 1800,
+        "token_type": "bearer",
+    }
+
+
+def test_oauth_introspect_fakes_the_published_shape() -> None:
+    config = {}
+    fake = FakeValues(seed_for_call("hubspot", "oauth_introspect", config))
+
+    faked = respond("oauth_introspect", {"config": config, "fake": fake})
+
+    assert faked == {
+        "active": True,
+        "token_type": "Bearer",
+        "token_use": "access_token",
+        "expires_in": 1800,
+    }
+
+
+def test_oauth_refresh_fakes_the_published_shape() -> None:
+    config = {}
+    fake = FakeValues(seed_for_call("hubspot", "oauth_refresh", config))
+
+    faked = respond("oauth_refresh", {"config": config, "fake": fake})
+
+    assert faked == {
+        "access_token": "3d68967adb5ff4899c160baef11f46ff21d5e9ff",
+        "refresh_token": "01a2b6ca-b800-782b-7345-8eed4fdfc5c1",
+        "expires_in": 1800,
+        "token_type": "bearer",
+    }
+
+
+def test_oauth_revoke_fakes_the_published_shape() -> None:
+    config = {}
+    fake = FakeValues(seed_for_call("hubspot", "oauth_revoke", config))
+
+    faked = respond("oauth_revoke", {"config": config, "fake": fake})
+
+    assert faked == {}
+
+
 def test_owner_list_fakes_the_published_shape() -> None:
     config = {}
     fake = FakeValues(seed_for_call("hubspot", "owner_list", config))

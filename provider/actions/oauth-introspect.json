@@ -1,0 +1,43 @@
+{
+  "operation": "oauth_introspect",
+  "kind": "oauth_introspect",
+  "title": "Introspect OAuth token",
+  "description": "Ask HubSpot whether a token is still active, and what it is for. Replaces both v1 token-info calls.",
+  "summary": "check whether a token is active",
+  "docs": "https://developers.hubspot.com/docs/api-reference/legacy/authentication/oauth-tokens/v1/migration-guide",
+  "sideEffects": "none",
+  "auth": {
+    "kind": "form",
+    "requires": ["clientId", "clientSecret"],
+    "fields": [
+      { "credential": "clientId", "as": "client_id" },
+      { "credential": "clientSecret", "as": "client_secret" }
+    ]
+  },
+  "request": {
+    "method": "POST",
+    "path": "/oauth/2026-03/token/introspect",
+    "encoding": "form"
+  },
+  "config": [
+    { "type": "text", "key": "token", "label": "Token", "required": true, "description": "The access token or refresh token to check.", "send": { "in": "body", "as": "token", "value": "string" } },
+    {
+      "type": "select",
+      "key": "tokenTypeHint",
+      "label": "Token type",
+      "description": "Which kind of token `token` is. Optional; HubSpot works it out when omitted.",
+      "options": [
+        { "value": "access_token", "label": "Access token" },
+        { "value": "refresh_token", "label": "Refresh token" }
+      ],
+      "send": { "in": "body", "as": "token_type_hint", "value": "string" }
+    }
+  ],
+  "outputShape": [
+    { "path": "data.active", "type": "boolean", "description": "Whether the token is active (RFC 7662). Every other field HubSpot returns is passed through as it arrived." }
+  ],
+  "contract": {
+    "sends": ["client_id", "client_secret", "token", "token_type_hint"],
+    "reads": ["active"]
+  }
+}

@@ -22,6 +22,10 @@ from .deal_get import deal_get
 from .deal_list import deal_list
 from .deal_search import deal_search
 from .deal_update import deal_update
+from .oauth_exchange_code import oauth_exchange_code
+from .oauth_introspect import oauth_introspect
+from .oauth_refresh import oauth_refresh
+from .oauth_revoke import oauth_revoke
 from .owner_list import owner_list
 from .pipeline_list import pipeline_list
 from .property_list import property_list
@@ -42,6 +46,10 @@ __all__ = [
     "deal_list",
     "deal_search",
     "deal_update",
+    "oauth_exchange_code",
+    "oauth_introspect",
+    "oauth_refresh",
+    "oauth_revoke",
     "owner_list",
     "pipeline_list",
     "property_list",

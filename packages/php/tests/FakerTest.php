@@ -510,6 +510,81 @@ it('deal_update fakes the shape HubSpot publishes', function () {
     ]);
 });
 
+it('oauth_exchange_code fakes the shape HubSpot publishes', function () {
+    $config = [];
+    $fake = new FakeValues(FakeValues::seedForCall('hubspot', 'oauth_exchange_code', $config));
+
+    $faked = HubspotFaker::respond('oauth_exchange_code', ['config' => $config, 'fake' => $fake]);
+
+    // Through JSON and back, because a faked EMPTY object is a stdClass — the only
+    // PHP value that spells `{}` on the wire — and `toBe` compares objects by
+    // identity. This asserts the VALUES; the `{}`-versus-`[]` spelling is what
+    // weaver's cross-runtime parity suite asserts, byte for byte.
+    $faked = json_decode((string) json_encode($faked), true, 512, JSON_THROW_ON_ERROR);
+
+    expect($faked)->toBe([
+        'access_token' => '6f1dad038d09abfdb6bcaf0648d3aba889701a1b',
+        'refresh_token' => 'cc54df42-a02a-7df3-4532-fe145421e699',
+        'expires_in' => 1800,
+        'token_type' => 'bearer',
+    ]);
+});
+
+it('oauth_introspect fakes the shape HubSpot publishes', function () {
+    $config = [];
+    $fake = new FakeValues(FakeValues::seedForCall('hubspot', 'oauth_introspect', $config));
+
+    $faked = HubspotFaker::respond('oauth_introspect', ['config' => $config, 'fake' => $fake]);
+
+    // Through JSON and back, because a faked EMPTY object is a stdClass — the only
+    // PHP value that spells `{}` on the wire — and `toBe` compares objects by
+    // identity. This asserts the VALUES; the `{}`-versus-`[]` spelling is what
+    // weaver's cross-runtime parity suite asserts, byte for byte.
+    $faked = json_decode((string) json_encode($faked), true, 512, JSON_THROW_ON_ERROR);
+
+    expect($faked)->toBe([
+        'active' => true,
+        'token_type' => 'Bearer',
+        'token_use' => 'access_token',
+        'expires_in' => 1800,
+    ]);
+});
+
+it('oauth_refresh fakes the shape HubSpot publishes', function () {
+    $config = [];
+    $fake = new FakeValues(FakeValues::seedForCall('hubspot', 'oauth_refresh', $config));
+
+    $faked = HubspotFaker::respond('oauth_refresh', ['config' => $config, 'fake' => $fake]);
+
+    // Through JSON and back, because a faked EMPTY object is a stdClass — the only
+    // PHP value that spells `{}` on the wire — and `toBe` compares objects by
+    // identity. This asserts the VALUES; the `{}`-versus-`[]` spelling is what
+    // weaver's cross-runtime parity suite asserts, byte for byte.
+    $faked = json_decode((string) json_encode($faked), true, 512, JSON_THROW_ON_ERROR);
+
+    expect($faked)->toBe([
+        'access_token' => '3d68967adb5ff4899c160baef11f46ff21d5e9ff',
+        'refresh_token' => '01a2b6ca-b800-782b-7345-8eed4fdfc5c1',
+        'expires_in' => 1800,
+        'token_type' => 'bearer',
+    ]);
+});
+
+it('oauth_revoke fakes the shape HubSpot publishes', function () {
+    $config = [];
+    $fake = new FakeValues(FakeValues::seedForCall('hubspot', 'oauth_revoke', $config));
+
+    $faked = HubspotFaker::respond('oauth_revoke', ['config' => $config, 'fake' => $fake]);
+
+    // Through JSON and back, because a faked EMPTY object is a stdClass — the only
+    // PHP value that spells `{}` on the wire — and `toBe` compares objects by
+    // identity. This asserts the VALUES; the `{}`-versus-`[]` spelling is what
+    // weaver's cross-runtime parity suite asserts, byte for byte.
+    $faked = json_decode((string) json_encode($faked), true, 512, JSON_THROW_ON_ERROR);
+
+    expect($faked)->toBe([]);
+});
+
 it('owner_list fakes the shape HubSpot publishes', function () {
     $config = [];
     $fake = new FakeValues(FakeValues::seedForCall('hubspot', 'owner_list', $config));

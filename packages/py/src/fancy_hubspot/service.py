@@ -23,6 +23,8 @@ build against.
 
 from __future__ import annotations
 
+import urllib.parse
+
 from ._runtime import PreparedRequest, ServiceDescriptor
 from .faker import respond
 
@@ -72,3 +74,128 @@ def descriptor() -> ServiceDescriptor:
         faker=respond,
         idempotency_header=None,
     )
+
+
+def _form_encode(value: str | None) -> str:
+    """RFC 3986, as in the php and typescript twins."""
+    return urllib.parse.quote(value or "", safe="")
+
+
+def _authorize_oauth_exchange_code(
+    credentials: dict[str, str | None],
+    request: PreparedRequest,
+    mode: str,
+) -> None:
+    """Send oauth_exchange_code's credentials in the form body; no bearer."""
+    pairs = "&".join(
+        [
+            "client_id=" + _form_encode(credentials.get("clientId")),
+            "client_secret=" + _form_encode(credentials.get("clientSecret")),
+        ]
+    )
+    encoded = pairs.encode("utf-8")
+    request.body = request.body + b"&" + encoded if request.body else encoded
+
+
+def _authorize_oauth_introspect(
+    credentials: dict[str, str | None],
+    request: PreparedRequest,
+    mode: str,
+) -> None:
+    """Send oauth_introspect's credentials in the form body; no bearer."""
+    pairs = "&".join(
+        [
+            "client_id=" + _form_encode(credentials.get("clientId")),
+            "client_secret=" + _form_encode(credentials.get("clientSecret")),
+        ]
+    )
+    encoded = pairs.encode("utf-8")
+    request.body = request.body + b"&" + encoded if request.body else encoded
+
+
+def _authorize_oauth_refresh(
+    credentials: dict[str, str | None],
+    request: PreparedRequest,
+    mode: str,
+) -> None:
+    """Send oauth_refresh's credentials in the form body; no bearer."""
+    pairs = "&".join(
+        [
+            "client_id=" + _form_encode(credentials.get("clientId")),
+            "client_secret=" + _form_encode(credentials.get("clientSecret")),
+            "refresh_token=" + _form_encode(credentials.get("refreshToken")),
+        ]
+    )
+    encoded = pairs.encode("utf-8")
+    request.body = request.body + b"&" + encoded if request.body else encoded
+
+
+def _authorize_oauth_revoke(
+    credentials: dict[str, str | None],
+    request: PreparedRequest,
+    mode: str,
+) -> None:
+    """Send oauth_revoke's credentials in the form body; no bearer."""
+    pairs = "&".join(
+        [
+            "client_id=" + _form_encode(credentials.get("clientId")),
+            "client_secret=" + _form_encode(credentials.get("clientSecret")),
+        ]
+    )
+    encoded = pairs.encode("utf-8")
+    request.body = request.body + b"&" + encoded if request.body else encoded
+
+
+def descriptor_for(operation: str) -> ServiceDescriptor:
+    """The descriptor ONE operation is called with.
+
+    oauth_exchange_code, oauth_introspect, oauth_refresh, oauth_revoke do not present the
+    service's authorize: they send the app's client credentials in the form
+    body, and require those instead of an access token.
+    """
+    service = descriptor()
+    if operation == "oauth_exchange_code":
+        return ServiceDescriptor(
+            service=service.service,
+            title=service.title,
+            sandbox=service.sandbox,
+            base_urls=service.base_urls,
+            requires=["clientId", "clientSecret"],
+            authorize=_authorize_oauth_exchange_code,
+            faker=service.faker,
+            idempotency_header=service.idempotency_header,
+        )
+    if operation == "oauth_introspect":
+        return ServiceDescriptor(
+            service=service.service,
+            title=service.title,
+            sandbox=service.sandbox,
+            base_urls=service.base_urls,
+            requires=["clientId", "clientSecret"],
+            authorize=_authorize_oauth_introspect,
+            faker=service.faker,
+            idempotency_header=service.idempotency_header,
+        )
+    if operation == "oauth_refresh":
+        return ServiceDescriptor(
+            service=service.service,
+            title=service.title,
+            sandbox=service.sandbox,
+            base_urls=service.base_urls,
+            requires=["clientId", "clientSecret", "refreshToken"],
+            authorize=_authorize_oauth_refresh,
+            faker=service.faker,
+            idempotency_header=service.idempotency_header,
+        )
+    if operation == "oauth_revoke":
+        return ServiceDescriptor(
+            service=service.service,
+            title=service.title,
+            sandbox=service.sandbox,
+            base_urls=service.base_urls,
+            requires=["clientId", "clientSecret"],
+            authorize=_authorize_oauth_revoke,
+            faker=service.faker,
+            idempotency_header=service.idempotency_header,
+        )
+    return service
