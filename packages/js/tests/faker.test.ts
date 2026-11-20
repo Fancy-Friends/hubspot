@@ -406,6 +406,53 @@ test("deal_update fakes the shape HubSpot publishes", () => {
   });
 });
 
+test("oauth_exchange_code fakes the shape HubSpot publishes", () => {
+  const config = {};
+
+  const faked = hubspotFaker("oauth_exchange_code", fakeRequest("hubspot", "oauth_exchange_code", config));
+
+  assert.deepEqual(faked, {
+    "access_token": "6f1dad038d09abfdb6bcaf0648d3aba889701a1b",
+    "refresh_token": "cc54df42-a02a-7df3-4532-fe145421e699",
+    "expires_in": 1800,
+    "token_type": "bearer"
+  });
+});
+
+test("oauth_introspect fakes the shape HubSpot publishes", () => {
+  const config = {};
+
+  const faked = hubspotFaker("oauth_introspect", fakeRequest("hubspot", "oauth_introspect", config));
+
+  assert.deepEqual(faked, {
+    "active": true,
+    "token_type": "Bearer",
+    "token_use": "access_token",
+    "expires_in": 1800
+  });
+});
+
+test("oauth_refresh fakes the shape HubSpot publishes", () => {
+  const config = {};
+
+  const faked = hubspotFaker("oauth_refresh", fakeRequest("hubspot", "oauth_refresh", config));
+
+  assert.deepEqual(faked, {
+    "access_token": "3d68967adb5ff4899c160baef11f46ff21d5e9ff",
+    "refresh_token": "01a2b6ca-b800-782b-7345-8eed4fdfc5c1",
+    "expires_in": 1800,
+    "token_type": "bearer"
+  });
+});
+
+test("oauth_revoke fakes the shape HubSpot publishes", () => {
+  const config = {};
+
+  const faked = hubspotFaker("oauth_revoke", fakeRequest("hubspot", "oauth_revoke", config));
+
+  assert.deepEqual(faked, {});
+});
+
 test("owner_list fakes the shape HubSpot publishes", () => {
   const config = {};
 

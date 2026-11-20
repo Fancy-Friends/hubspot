@@ -1,0 +1,37 @@
+{
+  "operation": "oauth_refresh",
+  "kind": "oauth_refresh",
+  "title": "Refresh OAuth token",
+  "description": "Use the connection's refresh token to get a new access token. HubSpot access tokens last 30 minutes.",
+  "summary": "refresh an access token",
+  "docs": "https://developers.hubspot.com/docs/api-reference/legacy/authentication/oauth-tokens/v1/migration-guide",
+  "sideEffects": "idempotent",
+  "$sideEffectsComment": "HubSpot's refresh tokens are reusable and do not rotate (oauth.refreshTokenRotates is false), so a repeated refresh only mints another access token.",
+  "auth": {
+    "kind": "form",
+    "requires": ["clientId", "clientSecret", "refreshToken"],
+    "fields": [
+      { "credential": "clientId", "as": "client_id" },
+      { "credential": "clientSecret", "as": "client_secret" },
+      { "credential": "refreshToken", "as": "refresh_token" }
+    ],
+    "$comment": "All three come from the connection. The refresh token is the account's stored credential, so it is never passed as config."
+  },
+  "request": {
+    "method": "POST",
+    "path": "/oauth/2026-03/token",
+    "encoding": "form",
+    "constants": { "grant_type": "refresh_token" }
+  },
+  "config": [],
+  "outputShape": [
+    { "path": "data.access_token", "type": "string", "description": "The new access token. Replace the connection's accessToken with it." },
+    { "path": "data.refresh_token", "type": "string", "description": "The same refresh token, returned again. HubSpot's does not rotate." },
+    { "path": "data.expires_in", "type": "number", "description": "Seconds until the new access token expires (1800 for HubSpot)." },
+    { "path": "data.token_type", "type": "string", "description": "The token type, `bearer`." }
+  ],
+  "contract": {
+    "sends": ["grant_type", "client_id", "client_secret", "refresh_token"],
+    "reads": ["access_token", "refresh_token", "expires_in", "token_type"]
+  }
+}

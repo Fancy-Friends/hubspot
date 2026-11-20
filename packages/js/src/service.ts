@@ -79,3 +79,76 @@ export const HUBSPOT: ServiceDescriptor = {
   authorize: hubspotAuthorize,
   faker: hubspotFaker,
 };
+
+/** RFC 3986: everything but A-Z a-z 0-9 - . _ ~ is percent-encoded, as in the php and python twins. */
+function formEncode(value: string): string {
+  return encodeURIComponent(value).replace(/[!'()*]/g, (c) => `%${c.charCodeAt(0).toString(16).toUpperCase()}`);
+}
+
+/**
+ * The descriptor ONE operation is called with.
+ *
+ * Most operations present the service's own authorize. oauth_exchange_code,
+ * oauth_introspect, oauth_refresh, oauth_revoke do not: they authenticate with
+ * the app's client credentials, sent in the form body, and require those
+ * instead of an access token.
+ */
+export function hubspotDescriptorFor(operation: string): ServiceDescriptor {
+  switch (operation) {
+    case "oauth_exchange_code":
+      return {
+        ...HUBSPOT,
+        requires: ["clientId", "clientSecret"],
+        authorize: (credentials, request) => {
+          const pairs = [
+            `client_id=${formEncode(String(credentials.clientId ?? ""))}`,
+            `client_secret=${formEncode(String(credentials.clientSecret ?? ""))}`,
+          ].join("&");
+
+          request.body = request.body ? `${request.body}&${pairs}` : pairs;
+        },
+      };
+    case "oauth_introspect":
+      return {
+        ...HUBSPOT,
+        requires: ["clientId", "clientSecret"],
+        authorize: (credentials, request) => {
+          const pairs = [
+            `client_id=${formEncode(String(credentials.clientId ?? ""))}`,
+            `client_secret=${formEncode(String(credentials.clientSecret ?? ""))}`,
+          ].join("&");
+
+          request.body = request.body ? `${request.body}&${pairs}` : pairs;
+        },
+      };
+    case "oauth_refresh":
+      return {
+        ...HUBSPOT,
+        requires: ["clientId", "clientSecret", "refreshToken"],
+        authorize: (credentials, request) => {
+          const pairs = [
+            `client_id=${formEncode(String(credentials.clientId ?? ""))}`,
+            `client_secret=${formEncode(String(credentials.clientSecret ?? ""))}`,
+            `refresh_token=${formEncode(String(credentials.refreshToken ?? ""))}`,
+          ].join("&");
+
+          request.body = request.body ? `${request.body}&${pairs}` : pairs;
+        },
+      };
+    case "oauth_revoke":
+      return {
+        ...HUBSPOT,
+        requires: ["clientId", "clientSecret"],
+        authorize: (credentials, request) => {
+          const pairs = [
+            `client_id=${formEncode(String(credentials.clientId ?? ""))}`,
+            `client_secret=${formEncode(String(credentials.clientSecret ?? ""))}`,
+          ].join("&");
+
+          request.body = request.body ? `${request.body}&${pairs}` : pairs;
+        },
+      };
+    default:
+      return HUBSPOT;
+  }
+}

@@ -44,6 +44,10 @@ import {
   hubspotDealListKind,
   hubspotDealSearchKind,
   hubspotDealUpdateKind,
+  hubspotOauthExchangeCodeKind,
+  hubspotOauthIntrospectKind,
+  hubspotOauthRefreshKind,
+  hubspotOauthRevokeKind,
   hubspotOwnerListKind,
   hubspotPipelineListKind,
   hubspotPropertyListKind,
@@ -65,6 +69,10 @@ import { hubspotDealGet } from "./actions/deal-get.js";
 import { hubspotDealList } from "./actions/deal-list.js";
 import { hubspotDealSearch } from "./actions/deal-search.js";
 import { hubspotDealUpdate } from "./actions/deal-update.js";
+import { hubspotOauthExchangeCode } from "./actions/oauth-exchange-code.js";
+import { hubspotOauthIntrospect } from "./actions/oauth-introspect.js";
+import { hubspotOauthRefresh } from "./actions/oauth-refresh.js";
+import { hubspotOauthRevoke } from "./actions/oauth-revoke.js";
 import { hubspotOwnerList } from "./actions/owner-list.js";
 import { hubspotPipelineList } from "./actions/pipeline-list.js";
 import { hubspotPropertyList } from "./actions/property-list.js";
@@ -340,6 +348,78 @@ export const hubspotDealUpdateExecutor: NodeExecutor = async (ctx) => {
   return { __port: "out", value: result };
 };
 
+export const hubspotOauthExchangeCodeExecutor: NodeExecutor = async (ctx) => {
+  const config = ((ctx.node.data as { config?: Record<string, unknown> })?.config ?? {});
+
+  const result = await hubspotOauthExchangeCode({
+    config,
+    input: ctx.inputs?.in,
+  });
+
+  ctx.emit({
+    type: "log",
+    level: "info",
+    nodeId: ctx.node.id,
+    message: `hubspot oauth_exchange_code ${(result.data as { id?: string })?.id} (${result.mode})`,
+  });
+
+  return { __port: "out", value: result };
+};
+
+export const hubspotOauthIntrospectExecutor: NodeExecutor = async (ctx) => {
+  const config = ((ctx.node.data as { config?: Record<string, unknown> })?.config ?? {});
+
+  const result = await hubspotOauthIntrospect({
+    config,
+    input: ctx.inputs?.in,
+  });
+
+  ctx.emit({
+    type: "log",
+    level: "info",
+    nodeId: ctx.node.id,
+    message: `hubspot oauth_introspect ${(result.data as { id?: string })?.id} (${result.mode})`,
+  });
+
+  return { __port: "out", value: result };
+};
+
+export const hubspotOauthRefreshExecutor: NodeExecutor = async (ctx) => {
+  const config = ((ctx.node.data as { config?: Record<string, unknown> })?.config ?? {});
+
+  const result = await hubspotOauthRefresh({
+    config,
+    input: ctx.inputs?.in,
+  });
+
+  ctx.emit({
+    type: "log",
+    level: "info",
+    nodeId: ctx.node.id,
+    message: `hubspot oauth_refresh ${(result.data as { id?: string })?.id} (${result.mode})`,
+  });
+
+  return { __port: "out", value: result };
+};
+
+export const hubspotOauthRevokeExecutor: NodeExecutor = async (ctx) => {
+  const config = ((ctx.node.data as { config?: Record<string, unknown> })?.config ?? {});
+
+  const result = await hubspotOauthRevoke({
+    config,
+    input: ctx.inputs?.in,
+  });
+
+  ctx.emit({
+    type: "log",
+    level: "info",
+    nodeId: ctx.node.id,
+    message: `hubspot oauth_revoke ${(result.data as { id?: string })?.id} (${result.mode})`,
+  });
+
+  return { __port: "out", value: result };
+};
+
 export const hubspotOwnerListExecutor: NodeExecutor = async (ctx) => {
   const config = ((ctx.node.data as { config?: Record<string, unknown> })?.config ?? {});
 
@@ -428,6 +508,10 @@ export const HUBSPOT_RUNNABLE_KINDS: NodeKindDefinition[] = [
   { ...hubspotDealListKind, executor: hubspotDealListExecutor },
   { ...hubspotDealSearchKind, executor: hubspotDealSearchExecutor },
   { ...hubspotDealUpdateKind, executor: hubspotDealUpdateExecutor },
+  { ...hubspotOauthExchangeCodeKind, executor: hubspotOauthExchangeCodeExecutor },
+  { ...hubspotOauthIntrospectKind, executor: hubspotOauthIntrospectExecutor },
+  { ...hubspotOauthRefreshKind, executor: hubspotOauthRefreshExecutor },
+  { ...hubspotOauthRevokeKind, executor: hubspotOauthRevokeExecutor },
   { ...hubspotOwnerListKind, executor: hubspotOwnerListExecutor },
   { ...hubspotPipelineListKind, executor: hubspotPipelineListExecutor },
   { ...hubspotPropertyListKind, executor: hubspotPropertyListExecutor },

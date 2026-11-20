@@ -32,6 +32,10 @@ from .actions.deal_get import deal_get
 from .actions.deal_list import deal_list
 from .actions.deal_search import deal_search
 from .actions.deal_update import deal_update
+from .actions.oauth_exchange_code import oauth_exchange_code
+from .actions.oauth_introspect import oauth_introspect
+from .actions.oauth_refresh import oauth_refresh
+from .actions.oauth_revoke import oauth_revoke
 from .actions.owner_list import owner_list
 from .actions.pipeline_list import pipeline_list
 from .actions.property_list import property_list
@@ -39,7 +43,7 @@ from .faker import respond
 from .service import BASE_URLS, CONNECTOR_API_VERSION, REQUIRES, SANDBOX, SERVICE, TITLE, descriptor
 from .triggers import crm_event
 
-__version__ = "0.7.3"
+__version__ = "0.8.0"
 
 __all__ = [
     "BASE_URLS",
@@ -66,6 +70,10 @@ __all__ = [
     "deal_search",
     "deal_update",
     "descriptor",
+    "oauth_exchange_code",
+    "oauth_introspect",
+    "oauth_refresh",
+    "oauth_revoke",
     "owner_list",
     "pipeline_list",
     "property_list",

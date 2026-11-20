@@ -1,0 +1,9 @@
+{
+  "operation": "oauth_refresh",
+  "response": {
+    "access_token": { "$fake": "hex", "length": 40 },
+    "refresh_token": { "$fake": "uuid" },
+    "expires_in": 1800,
+    "token_type": "bearer"
+  }
+}

@@ -36,6 +36,10 @@ import { hubspotDealGet } from "../src/actions/deal-get.js";
 import { hubspotDealList } from "../src/actions/deal-list.js";
 import { hubspotDealSearch } from "../src/actions/deal-search.js";
 import { hubspotDealUpdate } from "../src/actions/deal-update.js";
+import { hubspotOauthExchangeCode } from "../src/actions/oauth-exchange-code.js";
+import { hubspotOauthIntrospect } from "../src/actions/oauth-introspect.js";
+import { hubspotOauthRefresh } from "../src/actions/oauth-refresh.js";
+import { hubspotOauthRevoke } from "../src/actions/oauth-revoke.js";
 import { hubspotOwnerList } from "../src/actions/owner-list.js";
 import { hubspotPipelineList } from "../src/actions/pipeline-list.js";
 import { hubspotPropertyList } from "../src/actions/property-list.js";
@@ -548,6 +552,116 @@ test("deal_update sends PATCH /crm/v3/objects/deals/{dealId}", async () => {
       "order_id": "7"
     }
   });
+});
+
+test("oauth_exchange_code sends POST /oauth/2026-03/token", async () => {
+  const { seen, transport } = capture();
+
+  await hubspotOauthExchangeCode({
+    config: {
+      "code": "example-code",
+      "redirectUri": "example-redirectUri"
+    },
+    credentials: CREDENTIALS,
+    mode: "live",
+    transport,
+  });
+
+  assert.equal(seen.length, 1);
+  assert.equal(seen[0]!.method, "POST");
+  assert.ok(new URL(seen[0]!.url).pathname.endsWith("/oauth/2026-03/token"), seen[0]!.url);
+
+  assert.deepEqual(
+    Object.fromEntries(new URLSearchParams(String(seen[0]!.body ?? ""))),
+    {
+      "code": "example-code",
+      "redirect_uri": "example-redirectUri",
+      "grant_type": "authorization_code",
+      "client_id": "test_clientId",
+      "client_secret": "test_clientSecret"
+    },
+  );
+});
+
+test("oauth_introspect sends POST /oauth/2026-03/token/introspect", async () => {
+  const { seen, transport } = capture();
+
+  await hubspotOauthIntrospect({
+    config: {
+      "token": "example-token",
+      "tokenTypeHint": "access_token"
+    },
+    credentials: CREDENTIALS,
+    mode: "live",
+    transport,
+  });
+
+  assert.equal(seen.length, 1);
+  assert.equal(seen[0]!.method, "POST");
+  assert.ok(new URL(seen[0]!.url).pathname.endsWith("/oauth/2026-03/token/introspect"), seen[0]!.url);
+
+  assert.deepEqual(
+    Object.fromEntries(new URLSearchParams(String(seen[0]!.body ?? ""))),
+    {
+      "token": "example-token",
+      "token_type_hint": "access_token",
+      "client_id": "test_clientId",
+      "client_secret": "test_clientSecret"
+    },
+  );
+});
+
+test("oauth_refresh sends POST /oauth/2026-03/token", async () => {
+  const { seen, transport } = capture();
+
+  await hubspotOauthRefresh({
+    config: {},
+    credentials: CREDENTIALS,
+    mode: "live",
+    transport,
+  });
+
+  assert.equal(seen.length, 1);
+  assert.equal(seen[0]!.method, "POST");
+  assert.ok(new URL(seen[0]!.url).pathname.endsWith("/oauth/2026-03/token"), seen[0]!.url);
+
+  assert.deepEqual(
+    Object.fromEntries(new URLSearchParams(String(seen[0]!.body ?? ""))),
+    {
+      "grant_type": "refresh_token",
+      "client_id": "test_clientId",
+      "client_secret": "test_clientSecret",
+      "refresh_token": "test_refreshToken"
+    },
+  );
+});
+
+test("oauth_revoke sends POST /oauth/2026-03/token/revoke", async () => {
+  const { seen, transport } = capture();
+
+  await hubspotOauthRevoke({
+    config: {
+      "token": "example-token",
+      "tokenTypeHint": "refresh_token"
+    },
+    credentials: CREDENTIALS,
+    mode: "live",
+    transport,
+  });
+
+  assert.equal(seen.length, 1);
+  assert.equal(seen[0]!.method, "POST");
+  assert.ok(new URL(seen[0]!.url).pathname.endsWith("/oauth/2026-03/token/revoke"), seen[0]!.url);
+
+  assert.deepEqual(
+    Object.fromEntries(new URLSearchParams(String(seen[0]!.body ?? ""))),
+    {
+      "token": "example-token",
+      "token_type_hint": "refresh_token",
+      "client_id": "test_clientId",
+      "client_secret": "test_clientSecret"
+    },
+  );
 });
 
 test("owner_list sends GET /crm/v3/owners", async () => {

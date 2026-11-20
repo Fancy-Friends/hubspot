@@ -19,6 +19,10 @@ use ParticleAcademy\Hubspot\Actions\DealGet;
 use ParticleAcademy\Hubspot\Actions\DealList;
 use ParticleAcademy\Hubspot\Actions\DealSearch;
 use ParticleAcademy\Hubspot\Actions\DealUpdate;
+use ParticleAcademy\Hubspot\Actions\OauthExchangeCode;
+use ParticleAcademy\Hubspot\Actions\OauthIntrospect;
+use ParticleAcademy\Hubspot\Actions\OauthRefresh;
+use ParticleAcademy\Hubspot\Actions\OauthRevoke;
 use ParticleAcademy\Hubspot\Actions\OwnerList;
 use ParticleAcademy\Hubspot\Actions\PipelineList;
 use ParticleAcademy\Hubspot\Actions\PropertyList;
@@ -80,6 +84,10 @@ class HubspotClient
             DealList::OPERATION => $this->dealList($config, $input, $idempotencyKey, $credentials, $transport),
             DealSearch::OPERATION => $this->dealSearch($config, $input, $idempotencyKey, $credentials, $transport),
             DealUpdate::OPERATION => $this->dealUpdate($config, $input, $idempotencyKey, $credentials, $transport),
+            OauthExchangeCode::OPERATION => $this->oauthExchangeCode($config, $input, $idempotencyKey, $credentials, $transport),
+            OauthIntrospect::OPERATION => $this->oauthIntrospect($config, $input, $idempotencyKey, $credentials, $transport),
+            OauthRefresh::OPERATION => $this->oauthRefresh($config, $input, $idempotencyKey, $credentials, $transport),
+            OauthRevoke::OPERATION => $this->oauthRevoke($config, $input, $idempotencyKey, $credentials, $transport),
             OwnerList::OPERATION => $this->ownerList($config, $input, $idempotencyKey, $credentials, $transport),
             PipelineList::OPERATION => $this->pipelineList($config, $input, $idempotencyKey, $credentials, $transport),
             PropertyList::OPERATION => $this->propertyList($config, $input, $idempotencyKey, $credentials, $transport),
@@ -438,6 +446,102 @@ class HubspotClient
                 'method' => DealUpdate::METHOD,
                 'path' => DealUpdate::path($config),
                 'json' => DealUpdate::body($config),
+            ],
+            $input,
+            credentials: $credentials === [] ? null : $credentials,
+            transport: $transport,
+        );
+
+        return $result;
+    }
+
+    /**
+     * @param  array<string,mixed>  $config
+     * @param  array<string,string>  $credentials
+     */
+    private function oauthExchangeCode(array $config, mixed $input, ?string $idempotencyKey, array $credentials, ?Transport $transport): ConnectorResult
+    {
+        unset($idempotencyKey);
+        $result = ($this->client ?? new ConnectorClient)->call(
+            Hubspot::descriptorFor(OauthExchangeCode::OPERATION),
+            OauthExchangeCode::OPERATION,
+            $config,
+            [
+                'method' => OauthExchangeCode::METHOD,
+                'path' => OauthExchangeCode::PATH,
+                'form' => OauthExchangeCode::body($config),
+            ],
+            $input,
+            credentials: $credentials === [] ? null : $credentials,
+            transport: $transport,
+        );
+
+        return $result;
+    }
+
+    /**
+     * @param  array<string,mixed>  $config
+     * @param  array<string,string>  $credentials
+     */
+    private function oauthIntrospect(array $config, mixed $input, ?string $idempotencyKey, array $credentials, ?Transport $transport): ConnectorResult
+    {
+        unset($idempotencyKey);
+        $result = ($this->client ?? new ConnectorClient)->call(
+            Hubspot::descriptorFor(OauthIntrospect::OPERATION),
+            OauthIntrospect::OPERATION,
+            $config,
+            [
+                'method' => OauthIntrospect::METHOD,
+                'path' => OauthIntrospect::PATH,
+                'form' => OauthIntrospect::body($config),
+            ],
+            $input,
+            credentials: $credentials === [] ? null : $credentials,
+            transport: $transport,
+        );
+
+        return $result;
+    }
+
+    /**
+     * @param  array<string,mixed>  $config
+     * @param  array<string,string>  $credentials
+     */
+    private function oauthRefresh(array $config, mixed $input, ?string $idempotencyKey, array $credentials, ?Transport $transport): ConnectorResult
+    {
+        unset($idempotencyKey);
+        $result = ($this->client ?? new ConnectorClient)->call(
+            Hubspot::descriptorFor(OauthRefresh::OPERATION),
+            OauthRefresh::OPERATION,
+            $config,
+            [
+                'method' => OauthRefresh::METHOD,
+                'path' => OauthRefresh::PATH,
+                'form' => OauthRefresh::body($config),
+            ],
+            $input,
+            credentials: $credentials === [] ? null : $credentials,
+            transport: $transport,
+        );
+
+        return $result;
+    }
+
+    /**
+     * @param  array<string,mixed>  $config
+     * @param  array<string,string>  $credentials
+     */
+    private function oauthRevoke(array $config, mixed $input, ?string $idempotencyKey, array $credentials, ?Transport $transport): ConnectorResult
+    {
+        unset($idempotencyKey);
+        $result = ($this->client ?? new ConnectorClient)->call(
+            Hubspot::descriptorFor(OauthRevoke::OPERATION),
+            OauthRevoke::OPERATION,
+            $config,
+            [
+                'method' => OauthRevoke::METHOD,
+                'path' => OauthRevoke::PATH,
+                'form' => OauthRevoke::body($config),
             ],
             $input,
             credentials: $credentials === [] ? null : $credentials,

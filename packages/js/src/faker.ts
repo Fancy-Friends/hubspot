@@ -374,6 +374,37 @@ function fakeDealUpdate({ config, fake }: FakeRequest): unknown {
   };
 }
 
+function fakeOauthExchangeCode({ config, fake }: FakeRequest): unknown {
+  return {
+    "access_token": fake.hex(40),
+    "refresh_token": `${fake.hex(8)}-${fake.hex(4)}-${fake.hex(4)}-${fake.hex(4)}-${fake.hex(12)}`,
+    "expires_in": 1800,
+    "token_type": "bearer",
+  };
+}
+
+function fakeOauthIntrospect({ config, fake }: FakeRequest): unknown {
+  return {
+    "active": true,
+    "token_type": "Bearer",
+    "token_use": "access_token",
+    "expires_in": 1800,
+  };
+}
+
+function fakeOauthRefresh({ config, fake }: FakeRequest): unknown {
+  return {
+    "access_token": fake.hex(40),
+    "refresh_token": `${fake.hex(8)}-${fake.hex(4)}-${fake.hex(4)}-${fake.hex(4)}-${fake.hex(12)}`,
+    "expires_in": 1800,
+    "token_type": "bearer",
+  };
+}
+
+function fakeOauthRevoke({ config, fake }: FakeRequest): unknown {
+  return {};
+}
+
 function fakeOwnerList({ config, fake }: FakeRequest): unknown {
   const boundOwnerId = Array.from({ length: 8 }, () => fake.int(0, 9)).join("");
 
@@ -526,6 +557,18 @@ export const hubspotFaker: ConnectorFaker = (operation, request) => {
 
     case "deal_update":
       return fakeDealUpdate(request);
+
+    case "oauth_exchange_code":
+      return fakeOauthExchangeCode(request);
+
+    case "oauth_introspect":
+      return fakeOauthIntrospect(request);
+
+    case "oauth_refresh":
+      return fakeOauthRefresh(request);
+
+    case "oauth_revoke":
+      return fakeOauthRevoke(request);
 
     case "owner_list":
       return fakeOwnerList(request);

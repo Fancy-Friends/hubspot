@@ -1,0 +1,39 @@
+{
+  "operation": "oauth_exchange_code",
+  "kind": "oauth_exchange_code",
+  "title": "Exchange OAuth code",
+  "description": "Exchange the authorization code HubSpot sent to your redirect URL for an access token and a refresh token.",
+  "summary": "exchange an OAuth code for tokens",
+  "docs": "https://developers.hubspot.com/docs/api-reference/legacy/authentication/oauth-tokens/v1/migration-guide",
+  "sideEffects": "unsafe-to-replay",
+  "$sideEffectsComment": "A code is single-use. A replay after a lost response is refused by HubSpot, so a host must not retry it blindly: send the person through the install again instead.",
+  "auth": {
+    "kind": "form",
+    "requires": ["clientId", "clientSecret"],
+    "fields": [
+      { "credential": "clientId", "as": "client_id" },
+      { "credential": "clientSecret", "as": "client_secret" }
+    ],
+    "$comment": "The app's client credentials, from the connection, in the form body (HubSpot refuses sensitive data in the URL). No access token exists yet, so the service's bearer is NOT presented."
+  },
+  "request": {
+    "method": "POST",
+    "path": "/oauth/2026-03/token",
+    "encoding": "form",
+    "constants": { "grant_type": "authorization_code" }
+  },
+  "config": [
+    { "type": "text", "key": "code", "label": "Authorization code", "required": true, "description": "The `code` query parameter HubSpot added to your redirect URL. Single-use, and short-lived.", "send": { "in": "body", "as": "code", "value": "string" } },
+    { "type": "text", "key": "redirectUri", "label": "Redirect URL", "required": true, "description": "The redirect URL the install was started with, exactly as sent: HubSpot refuses the exchange if it differs.", "send": { "in": "body", "as": "redirect_uri", "value": "string" } }
+  ],
+  "outputShape": [
+    { "path": "data.access_token", "type": "string", "description": "The new access token. Store it as the connection's accessToken." },
+    { "path": "data.refresh_token", "type": "string", "description": "The installation's refresh token. Store it as the connection's refreshToken; it does not expire while the app stays installed." },
+    { "path": "data.expires_in", "type": "number", "description": "Seconds until the access token expires (1800 for HubSpot)." },
+    { "path": "data.token_type", "type": "string", "description": "The token type, `bearer`." }
+  ],
+  "contract": {
+    "sends": ["grant_type", "client_id", "client_secret", "redirect_uri", "code"],
+    "reads": ["access_token", "refresh_token", "expires_in", "token_type"]
+  }
+}

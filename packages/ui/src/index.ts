@@ -33,6 +33,10 @@ export * from "./kinds/deal-get.js";
 export * from "./kinds/deal-list.js";
 export * from "./kinds/deal-search.js";
 export * from "./kinds/deal-update.js";
+export * from "./kinds/oauth-exchange-code.js";
+export * from "./kinds/oauth-introspect.js";
+export * from "./kinds/oauth-refresh.js";
+export * from "./kinds/oauth-revoke.js";
 export * from "./kinds/owner-list.js";
 export * from "./kinds/pipeline-list.js";
 export * from "./kinds/property-list.js";
@@ -54,6 +58,10 @@ import { hubspotDealGetKind } from "./kinds/deal-get.js";
 import { hubspotDealListKind } from "./kinds/deal-list.js";
 import { hubspotDealSearchKind } from "./kinds/deal-search.js";
 import { hubspotDealUpdateKind } from "./kinds/deal-update.js";
+import { hubspotOauthExchangeCodeKind } from "./kinds/oauth-exchange-code.js";
+import { hubspotOauthIntrospectKind } from "./kinds/oauth-introspect.js";
+import { hubspotOauthRefreshKind } from "./kinds/oauth-refresh.js";
+import { hubspotOauthRevokeKind } from "./kinds/oauth-revoke.js";
 import { hubspotOwnerListKind } from "./kinds/owner-list.js";
 import { hubspotPipelineListKind } from "./kinds/pipeline-list.js";
 import { hubspotPropertyListKind } from "./kinds/property-list.js";
@@ -76,6 +84,10 @@ export const HUBSPOT_KINDS: NodeKindDefinition[] = [
   hubspotDealListKind,
   hubspotDealSearchKind,
   hubspotDealUpdateKind,
+  hubspotOauthExchangeCodeKind,
+  hubspotOauthIntrospectKind,
+  hubspotOauthRefreshKind,
+  hubspotOauthRevokeKind,
   hubspotOwnerListKind,
   hubspotPipelineListKind,
   hubspotPropertyListKind,

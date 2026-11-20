@@ -403,6 +403,41 @@ def _deal_update(config: dict[str, Any], fake: FakeValues) -> Any:
     }
 
 
+def _oauth_exchange_code(config: dict[str, Any], fake: FakeValues) -> Any:
+    return {
+        "access_token": fake.hex(40),
+        "refresh_token": "-".join(
+            [fake.hex(8), fake.hex(4), fake.hex(4), fake.hex(4), fake.hex(12)]
+        ),
+        "expires_in": 1800,
+        "token_type": "bearer",
+    }
+
+
+def _oauth_introspect(config: dict[str, Any], fake: FakeValues) -> Any:
+    return {
+        "active": True,
+        "token_type": "Bearer",
+        "token_use": "access_token",
+        "expires_in": 1800,
+    }
+
+
+def _oauth_refresh(config: dict[str, Any], fake: FakeValues) -> Any:
+    return {
+        "access_token": fake.hex(40),
+        "refresh_token": "-".join(
+            [fake.hex(8), fake.hex(4), fake.hex(4), fake.hex(4), fake.hex(12)]
+        ),
+        "expires_in": 1800,
+        "token_type": "bearer",
+    }
+
+
+def _oauth_revoke(config: dict[str, Any], fake: FakeValues) -> Any:
+    return {}
+
+
 def _owner_list(config: dict[str, Any], fake: FakeValues) -> Any:
     bound_owner_id = "".join(str(fake.int(0, 9)) for _ in range(8))
 
@@ -558,6 +593,18 @@ def respond(operation: str, request: dict[str, Any]) -> Any:
 
     if operation == "deal_update":
         return _deal_update(config, fake)
+
+    if operation == "oauth_exchange_code":
+        return _oauth_exchange_code(config, fake)
+
+    if operation == "oauth_introspect":
+        return _oauth_introspect(config, fake)
+
+    if operation == "oauth_refresh":
+        return _oauth_refresh(config, fake)
+
+    if operation == "oauth_revoke":
+        return _oauth_revoke(config, fake)
 
     if operation == "owner_list":
         return _owner_list(config, fake)

@@ -7,6 +7,50 @@ The four packages share one version, because they are generated from one
 `provider/` definition and a version that meant something different in each
 would be a version nobody could reason about.
 
+## [0.8.0] — 2026-11-21
+
+### Added
+
+- **HubSpot's OAuth token calls, as four operations in every runtime,**
+  against the 2026-03 endpoints 0.7.3 declared. A host stops hand-rolling
+  them:
+
+  | Operation | Sends | Returns |
+  |---|---|---|
+  | `oauth_exchange_code` | `code` and `redirectUri` from config | `access_token`, `refresh_token`, `expires_in`, `token_type` |
+  | `oauth_refresh` | the connection's `refreshToken` | a new `access_token` (and the same refresh token) |
+  | `oauth_introspect` | `token` (and optional `tokenTypeHint`) | `active`, with HubSpot's other fields as they arrive |
+  | `oauth_revoke` | `token` (and optional `tokenTypeHint`) | HubSpot's answer, or null |
+
+  - **Calling them:**
+    - PHP: `Hubspot::descriptorFor($operation)` with the core client, or the
+      Laravel client's `call('oauth_refresh', …)`;
+    - TypeScript: `hubspotOauthRefresh({ config, credentials })`;
+    - Python: `oauth_refresh(config, credentials=…)`.
+  - **No bearer is sent.** These run before there is an access token, or
+    about one. They authenticate with the APP's client credentials, which
+    HubSpot wants in the form body.
+  - **The credentials come from the CONNECTION, never from config:**
+    `clientId`, `clientSecret` and, for refresh, `refreshToken`. A client
+    secret in a node's config would be a provider secret in a workflow
+    definition.
+  - **Each call requires its own credentials, not `accessToken`.** A missing
+    one is refused before anything is sent.
+  - **The three runtimes send the same bytes.** Each encodes the credentials
+    by RFC 3986, and a test drives all three and compares them with a written
+    expectation.
+  - **The exchange is `unsafe-to-replay`, and the retry policy follows it:** a
+    code is single-use, so a lost response means a fresh install, not a retry.
+    Refresh and revoke are idempotent, and introspect has no side effects.
+  - **Not yet verified live:** revoke's companion fields are inferred from
+    HubSpot's 2026-09 reference. The first live revoke settles it.
+
+- **New vocabulary: per-operation `auth`** (`{kind: "form", requires,
+  fields}`), with `descriptorFor(operation)` in all three runtimes. An action
+  that declares it must call one of the manifest's declared OAuth endpoints,
+  so the URL a host reads in the index and the URL the package calls cannot
+  drift apart.
+
 ## [0.7.3] — 2026-11-18
 
 ### Fixed
